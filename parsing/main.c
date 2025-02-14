@@ -19,19 +19,15 @@ int	main()
 		if (check_quotes(line) != 1)
 		{
 			tokens = tokenize(line);
+			check_tokens(tokens);
 			for(int i = 0; tokens[i]; i++)
 			{
-				if (tokens[i]->expandable == 1)
-					printf("expandable   ");
-				if (tokens[i]->quoted == 1)
-					printf("inside quotes   ");
-				printf("%s\n", tokens[i]->content);
+				printf("%s\n",tokens[i]->content);
 				free(tokens[i]->content);
 				free(tokens[i]);
 			}
-				free(tokens);
+			free(tokens);
 		}
-		// printf("%s\n", line);
 		free(line);
 	}
 }

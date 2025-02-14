@@ -1,82 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizing2.c                                      :+:      :+:    :+:   */
+/*   tokenizing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:33:05 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/14 16:42:12 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/14 20:58:21 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-int is_word_char(char c)
-{
-    return (isalnum(c) || c == '_' || c == '.' || c == '/' || c == '-' || c == '$');
-}
-
-int 	is_special(char c)
-{
-	return (c == '&' || c == ';' || c == '(' || c == '`' || c == '{' || c == '}' || c == ')' || c == '*'
-		|| c == '~' || c == '\\');
-}
-
-int to_handle(char c)
-{
-	return(c == '|' || c == '<' || c == '>' || is_special(c));
-}
-
-int	count_tokens(char *str)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'')
-		{
-			count++;
-			i++;
-			while(str[i] && str[i] != '\'')
-				i++;
-		}
-		if (str[i] == '\"')
-		{
-			count++;
-			i++;
-			while(str[i] && str[i] != '\"')
-				i++;
-		}
-		if (is_word_char(str[i]) || to_handle(str[i]))
-		{
-			count++;
-			if(is_word_char(str[i]))
-				while(str[i] && is_word_char(str[i + 1]))
-					i++;
-			if(str[i] == '>' && str[i + 1] == '>')
-				i++;
-			else if (str[i] == '<' && str[i + 1] == '<')
-				i++;
-		}
-		i++ ;
-	}
-	return(count);
-}
-
-int count_no_quotes(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i] && str[i] != ' ' && is_word_char(str[i]))
-		i++ ;
-	return (i);
-}
 
 t_token	*insert_token_arr_word(int *i, char *str, int quote)
 {
@@ -86,10 +20,13 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote)
 
 	j = 0;
 	token = malloc(sizeof(t_token));
-	if (quote == S_QUOTE || quote == D_QUOTE)
-		while(str[j] && (str[j] != '\'' && str[j] != '\"'))
-			j++;
-	else
+	if (quote == S_QUOTE) 
+        while (str[j] && str[j] != '\'')
+            j++;
+    else if (quote == D_QUOTE) 
+        while (str[j] && str[j] != '\"')
+            j++;
+    else
 		j = count_no_quotes(str);
 	new = malloc(sizeof(char) * (j + 1));
 	ft_strlcpy(new, str, j + 1);
@@ -98,12 +35,9 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote)
 	else
 		token->expandable = 0;
 	token->content = new;
-	if (quote == NO_QUOTE)
-		token->quoted = 0;
-	else
-		token->quoted = 1;
+	token->quoted = (quote != NO_QUOTE);
 	token->type = WORD;
-	*i = *i + j;
+	*i += j;
 	return(token);
 }
 
@@ -137,7 +71,7 @@ t_token	*insert_token_arr_op(int *i, char *str)
 	}
 	else if (str[0] == '|' && str[1] == '|')
 	{
-		token->type = HERE_DOC;
+		token->type = SPECIAL_CHAR;
 		token->content = ft_strdup("||");
 		*i += 1;
 	}
@@ -151,32 +85,50 @@ t_token	*insert_token_arr_op(int *i, char *str)
 		insert_other_ops(token, str);
 	token->quoted = 0;
 	token->expandable = 0;
+	*i += 1;
 	return (token);
+}
+
+void	loop_token_arr(char *str, t_token **token_arr)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+    {
+        if (str[i] == '\'' || str[i] =='\"') 
+		{
+			if (!str[++i])
+				break;
+			if (str[i - 1] == '\'')
+            	token_arr[j++] = insert_token_arr_word(&i, str + i, S_QUOTE);
+			else if (str[i - 1] == '\"')
+				token_arr[j++] = insert_token_arr_word(&i, str + i, D_QUOTE);
+			i++;
+        } 
+		else if (is_word_char(str[i])) 
+            token_arr[j++] = insert_token_arr_word(&i, str + i, NO_QUOTE);
+		else if (to_handle(str[i])) 
+            token_arr[j++] = insert_token_arr_op(&i, str + i);
+        else 
+            i++;
+    }
+    token_arr[j] = NULL;
 }
 
 t_token **tokenize(char *str)
 {
     int tokens_count;
     int i;
-    t_token **token_arr;
     int j;
+    t_token **token_arr;
 
-    j = 0;
-    i = 0;
+	i = 0;
+	j = 0;
     tokens_count = count_tokens(str);
     token_arr = malloc(sizeof(t_token *) * (tokens_count + 1));
-    while (str[i])
-    {
-		if (str[i] == '\'')
-			token_arr[j++] = insert_token_arr_word(&i, str + ++i, S_QUOTE);
-		else if (str[i] == '\"')
-			token_arr[j++] = insert_token_arr_word(&i, str + ++i, D_QUOTE);
-		else if (is_word_char(str[i]))
-			token_arr[j++] = insert_token_arr_word(&i, str + i, NO_QUOTE);
-		else if (to_handle(str[i]))
-			token_arr[j++] = insert_token_arr_op(&i, str + i);
-		i++;
-    }
-    token_arr[j] = NULL;
+    loop_token_arr(str, token_arr);
     return (token_arr);
 }

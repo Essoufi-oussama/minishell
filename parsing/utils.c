@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:28:07 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/14 16:42:31 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/14 20:05:08 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,46 @@ char	*ft_strdup(const char *s1)
 	}
 	s2[i] = 0;
 	return (s2);
+}
+
+int	ft_isalpha(int c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	return (0);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
+int	ft_isalnum(int c)
+{
+	if (ft_isalpha(c) || ft_isdigit(c))
+		return (1);
+	return (0);
+}
+
+int is_word_char(char c)
+{
+    return (ft_isalnum(c) || c == '_' || c == '.' || c == '/' || 
+            c == '-' || c == '$' || c == '+' || c == '@' || 
+            c == ':' || c == ','|| c == '=');
+}
+
+int is_special(char c)
+{
+    return (c == '&' || c == ';' || c == '(' || c == '`' || 
+            c == '{' || c == '}' || c == ')' || c == '*' || 
+            c == '~' || c == '\\' || c == '%' || c == '!' || 
+            c == '#' || c == '?'  || c == '[' || 
+            c == ']' || c == '^' );
+}
+
+int to_handle(char c)
+{
+	return(c == '|' || c == '<' || c == '>' || is_special(c));
 }
