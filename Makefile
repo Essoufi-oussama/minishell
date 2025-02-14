@@ -1,4 +1,5 @@
-SRCS= parsing/main.c parsing/tokenizing.c parsing/lexing.c
+SRCS= parsing/main.c parsing/tokenizing.c parsing/lexing.c parsing/utils.c \
+	parsing/counting_tokens.c
 OBJS = $(SRCS:%.c=%.o)
 HEADER = parsing/minishell.h
 

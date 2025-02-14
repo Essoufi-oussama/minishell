@@ -5,118 +5,130 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/09 13:43:26 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/12 14:26:51 by oessoufi         ###   ########.fr       */
+/*   Created: 2025/02/13 16:33:05 by oessoufi          #+#    #+#             */
+/*   Updated: 2025/02/14 20:58:21 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int 	is_special(char c)
+t_token	*insert_token_arr_word(int *i, char *str, int quote)
 {
-	return (c == '&' || c == ';' || c == '(' || c == '`' || c == '{' || c == '}' || c == ')' || c == '*'
-		|| c == '~' || c == '\\');
+	char *new;
+	int j;
+	t_token *token;
+
+	j = 0;
+	token = malloc(sizeof(t_token));
+	if (quote == S_QUOTE) 
+        while (str[j] && str[j] != '\'')
+            j++;
+    else if (quote == D_QUOTE) 
+        while (str[j] && str[j] != '\"')
+            j++;
+    else
+		j = count_no_quotes(str);
+	new = malloc(sizeof(char) * (j + 1));
+	ft_strlcpy(new, str, j + 1);
+	if ((quote ==  D_QUOTE || quote == NO_QUOTE) && ft_strrchr(new, '$'))
+		token->expandable = 1;
+	else
+		token->expandable = 0;
+	token->content = new;
+	token->quoted = (quote != NO_QUOTE);
+	token->type = WORD;
+	*i += j;
+	return(token);
 }
 
-static int to_handle(char c)
+void	insert_other_ops(t_token *token, char *str)
 {
-	return(isalnum(c) || c == '|' || c == '<' || c == '>' || c == '\'' 
-		|| c == '$' || c == '\"' || c == ' ' || is_special(c));
+	char	*new;
+
+	if (str[0] == '|')
+		token->type = PIPE;
+	else if (str[0] == '<')
+		token->type = INPUT_DIRECTION;
+	else if (str[0] == '>')
+		token->type = OUTPUT_DIRECTION;
+	else
+		token->type = SPECIAL_CHAR;
+	new = malloc(sizeof(char) * 2);
+	ft_strlcpy(new, str, 2);
+	token->content = new;
 }
 
-static	int other_ops(char c)
+t_token	*insert_token_arr_op(int *i, char *str)
 {
-	if (c == '<')
-		return INPUT_DIRECTION;
-	else if (c ==  '>')
-		return OUTPUT_DIRECTION;
-	else if (c == '\'')
-		return (SINGLE_QUOTE);
-	else if (c == '$')
-		return (DOLLAR);
-	else if (c == '\"')
-		return (DOUBLE_QUOTE);
-	else if (c == ' ')
-		return (WHITE_SPACE);
-	else if (c == '|')
-		return PIPE;
-	return (SPECIAL_CHAR);
-}
+	t_token	*token;
 
-int	count_tokens(char *str)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (str[i])
+	token = malloc(sizeof(t_token));
+	if (str[0] == '<' && str[1] == '<')
 	{
-		if (to_handle(str[i]))
-		{
-			count++;
-			if(isalnum(str[i]))
-				while(str[i] && isalnum(str[i + 1]))
-					i++;
-			if(str[i] == '|' && str[i + 1] == '|')
-				i++;
-			else if(str[i] == '>' && str[i + 1] == '>')
-				i++;
-			else if (str[i] == '<' && str[i + 1] == '<')
-				i++;
-		}
-		i++ ;
+		token->type = HERE_DOC;
+		token->content = ft_strdup("<<");
+		*i += 1;
 	}
-	return(count);
-}
-
-void	insert_token_arr(int *arr, int *i, char *str, int j)
-{
-	if (isalnum(str[*i]))
+	else if (str[0] == '|' && str[1] == '|')
 	{
-		arr[j] = WORD;
-		while(str[*i] && isalnum(str[*i + 1]))
-			(*i)++;
+		token->type = SPECIAL_CHAR;
+		token->content = ft_strdup("||");
+		*i += 1;
 	}
-	else if (str[*i] == '|' && str[*i + 1] == '|')
+	else if (str[0] == '>' && str[1] == '>')
 	{
-		arr[j] = SPECIAL_CHAR;
-		(*i)++;
-	}
-	else if (str[*i] == '<' && str[*i + 1] == '<')
-	{
-		arr[j] = HERE_DOC;
-		(*i)++;
-	}
-	else if (str[*i] == '>' && str[*i + 1] == '>')
-	{
-		arr[j] = OUT_APPEND;
-		(*i)++;
+		token->type = OUT_APPEND;
+		token->content = ft_strdup(">>");
+		*i += 1;
 	}
 	else
-		arr[j] = other_ops(str[*i]);
+		insert_other_ops(token, str);
+	token->quoted = 0;
+	token->expandable = 0;
+	*i += 1;
+	return (token);
 }
 
-int *tokenize(char *str, int *token_size)
+void	loop_token_arr(char *str, t_token **token_arr)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+    {
+        if (str[i] == '\'' || str[i] =='\"') 
+		{
+			if (!str[++i])
+				break;
+			if (str[i - 1] == '\'')
+            	token_arr[j++] = insert_token_arr_word(&i, str + i, S_QUOTE);
+			else if (str[i - 1] == '\"')
+				token_arr[j++] = insert_token_arr_word(&i, str + i, D_QUOTE);
+			i++;
+        } 
+		else if (is_word_char(str[i])) 
+            token_arr[j++] = insert_token_arr_word(&i, str + i, NO_QUOTE);
+		else if (to_handle(str[i])) 
+            token_arr[j++] = insert_token_arr_op(&i, str + i);
+        else 
+            i++;
+    }
+    token_arr[j] = NULL;
+}
+
+t_token **tokenize(char *str)
 {
     int tokens_count;
     int i;
-    int *token_arr;
     int j;
+    t_token **token_arr;
 
-    j = 0;
-    i = 0;
+	i = 0;
+	j = 0;
     tokens_count = count_tokens(str);
-	*token_size = tokens_count;
-    token_arr = malloc(sizeof(int) * tokens_count + 1);
-    if (token_arr == NULL)
-        return (NULL);
-    while (str[i])
-    {
-        if (to_handle(str[i]))
-			insert_token_arr(token_arr, &i, str, j++);
-		i++;
-    }
-    token_arr[j] = -1;
+    token_arr = malloc(sizeof(t_token *) * (tokens_count + 1));
+    loop_token_arr(str, token_arr);
     return (token_arr);
 }

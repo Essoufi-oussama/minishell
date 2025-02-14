@@ -3,8 +3,8 @@
 int	main()
 {
 	char *line;
-	int	*tokens;
-	int token_size;
+	t_token	**tokens;
+	// int token_size;
 
 	while(1)
 	{
@@ -16,11 +16,18 @@ int	main()
 		}
 		if (strlen(line) > 0)
 			add_history(line);
-		tokens = tokenize(line, &token_size);
-		// for (int i = 0; tokens[i] != -1; i++)
-		// 	printf("%d  ", tokens[i]);
-		// printf("\n");
-		check_tokens(tokens, token_size);
+		if (check_quotes(line) != 1)
+		{
+			tokens = tokenize(line);
+			check_tokens(tokens);
+			for(int i = 0; tokens[i]; i++)
+			{
+				printf("%s\n",tokens[i]->content);
+				free(tokens[i]->content);
+				free(tokens[i]);
+			}
+			free(tokens);
+		}
 		free(line);
 	}
 }
