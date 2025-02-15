@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 14:28:07 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/15 18:06:20 by oessoufi         ###   ########.fr       */
+/*   Created: 2025/01/19 10:32:36 by oessoufi          #+#    #+#             */
+/*   Updated: 2025/01/19 15:23:35 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "push_swap_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -25,27 +25,24 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
+int	ft_strcmp(char *s1, char *s2)
 {
-	size_t	i;
-	size_t	src_len;
+	int	i;
 
 	i = 0;
-	src_len = ft_strlen(src);
-	if (dstsize != 0)
+	while (s1[i] || s2[i])
 	{
-		while (i < (dstsize - 1) && src[i] != '\0')
-		{
-			dest[i] = src[i];
-			i++;
-		}
-		dest[i] = 0;
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
 	}
-	return (src_len);
+	return (0);
 }
 
 char	*ft_strchr(const char *s, int c)
 {
+	if (s == NULL)
+		return (NULL);
 	while (*s)
 	{
 		if (*s == (char)c)
@@ -74,13 +71,6 @@ char	*ft_strdup(const char *s1)
 	}
 	s2[i] = 0;
 	return (s2);
-}
-
-int	ft_isprint(int c)
-{
-	if (c > 32 && c <= 126)
-		return (1);
-	return (0);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)

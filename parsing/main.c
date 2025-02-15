@@ -20,9 +20,10 @@ int	main()
 		{
 			tokens = tokenize(line);
 			check_tokens(tokens);
+			expanding(tokens);
 			for(int i = 0; tokens[i]; i++)
 			{
-				printf("%s\n",tokens[i]->content);
+				printf("%s\n", tokens[i]->content);
 				free(tokens[i]->content);
 				free(tokens[i]);
 			}

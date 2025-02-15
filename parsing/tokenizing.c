@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:33:05 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/15 15:56:12 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/15 21:09:36 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote)
 
 	j = 0;
 	token = malloc(sizeof(t_token));
-	if (quote == S_QUOTE) 
+	if (quote == S_QUOTE)
         while (str[j] && str[j] != '\'')
             j++;
     else if (quote == D_QUOTE) 
@@ -35,8 +35,8 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote)
 	else
 		token->expandable = 0;
 	token->content = new;
-	token->quoted = (quote != NO_QUOTE);
 	token->type = WORD;
+	token->quoted = quote;
 	*i += j;
 	return(token);
 }

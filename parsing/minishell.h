@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/15 15:55:51 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/15 20:59:50 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <readline/history.h>
 #include <stdlib.h>
 #include <string.h>
+
 typedef enum e_tokens_types
 {
 	PIPE ,
@@ -35,7 +36,6 @@ typedef struct s_token
 	int		expandable;
 	char	*content;
 } t_token;
-
 
 typedef enum e_quote
 {
@@ -60,9 +60,16 @@ int	check_consecutive_expressions(t_token **tokens);
 int	check_end_and_pipe(t_token **tokens);
 void	loop_token_arr(char *str, t_token **token_arr);
 
+void	expanding(t_token **tokens);
+char	*build_expanded_string(char *token, char *previous, int i);
+void	handle_quoted_token(t_token *token);
+char	*expand_token(char *token);
+
 size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);
 char	*ft_strdup(const char *s1);
 int		ft_isprint(int c);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	**ft_split(char const *s, char sep);
 #endif

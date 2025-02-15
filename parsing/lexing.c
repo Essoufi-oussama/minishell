@@ -6,12 +6,11 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:40:59 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/15 15:53:50 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/15 18:07:40 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 int	check_quotes(char *str)
 {
