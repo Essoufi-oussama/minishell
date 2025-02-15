@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/14 20:49:17 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/15 15:55:51 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ typedef enum e_tokens_types
 	OUT_APPEND ,
 	HERE_DOC ,
 	WORD ,
-	SPECIAL_CHAR
 }	t_tokens_types;
 
 typedef struct s_token
@@ -62,10 +61,8 @@ int	check_end_and_pipe(t_token **tokens);
 void	loop_token_arr(char *str, t_token **token_arr);
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize);
-char	*ft_strrchr(const char *s, int c);
+char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);
 char	*ft_strdup(const char *s1);
-int	ft_isalpha(int c);
-int	ft_isdigit(int c);
-int	ft_isalnum(int c);
+int		ft_isprint(int c);
 #endif

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:28:07 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/14 20:05:08 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/15 15:55:24 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,16 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
 	return (src_len);
 }
 
-char	*ft_strrchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-
-	i = ft_strlen(s);
-	while (i >= 0)
+	while (*s)
 	{
-		if ((char) c == s[i])
-			return ((char *) s + i);
-		i--;
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
 	}
+	if ((char)c == '\0')
+		return ((char *)s);
 	return (NULL);
 }
 
@@ -77,44 +76,11 @@ char	*ft_strdup(const char *s1)
 	return (s2);
 }
 
-int	ft_isalpha(int c)
+int	ft_isprint(int c)
 {
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+	if (c > 32 && c <= 126)
 		return (1);
 	return (0);
 }
 
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
 
-int	ft_isalnum(int c)
-{
-	if (ft_isalpha(c) || ft_isdigit(c))
-		return (1);
-	return (0);
-}
-
-int is_word_char(char c)
-{
-    return (ft_isalnum(c) || c == '_' || c == '.' || c == '/' || 
-            c == '-' || c == '$' || c == '+' || c == '@' || 
-            c == ':' || c == ','|| c == '=');
-}
-
-int is_special(char c)
-{
-    return (c == '&' || c == ';' || c == '(' || c == '`' || 
-            c == '{' || c == '}' || c == ')' || c == '*' || 
-            c == '~' || c == '\\' || c == '%' || c == '!' || 
-            c == '#' || c == '?'  || c == '[' || 
-            c == ']' || c == '^' );
-}
-
-int to_handle(char c)
-{
-	return(c == '|' || c == '<' || c == '>' || is_special(c));
-}

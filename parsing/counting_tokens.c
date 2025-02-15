@@ -6,11 +6,21 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 16:23:14 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/14 19:48:43 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/15 15:54:28 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int is_word_char(char c)
+{
+    return (!to_handle(c) && ft_isprint(c) && c != '\'' && c != '\"');
+}
+
+int to_handle(char c)
+{
+	return(c == '|' || c == '<' || c == '>');
+}
 
 int handle_quotes(char *str, int *i, char quote_char)
 {

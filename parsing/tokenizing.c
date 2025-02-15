@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:33:05 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/14 20:58:21 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/15 15:56:12 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote)
 		j = count_no_quotes(str);
 	new = malloc(sizeof(char) * (j + 1));
 	ft_strlcpy(new, str, j + 1);
-	if ((quote ==  D_QUOTE || quote == NO_QUOTE) && ft_strrchr(new, '$'))
+	if ((quote ==  D_QUOTE || quote == NO_QUOTE) && ft_strchr(new, '$'))
 		token->expandable = 1;
 	else
 		token->expandable = 0;
@@ -51,8 +51,6 @@ void	insert_other_ops(t_token *token, char *str)
 		token->type = INPUT_DIRECTION;
 	else if (str[0] == '>')
 		token->type = OUTPUT_DIRECTION;
-	else
-		token->type = SPECIAL_CHAR;
 	new = malloc(sizeof(char) * 2);
 	ft_strlcpy(new, str, 2);
 	token->content = new;
@@ -67,12 +65,6 @@ t_token	*insert_token_arr_op(int *i, char *str)
 	{
 		token->type = HERE_DOC;
 		token->content = ft_strdup("<<");
-		*i += 1;
-	}
-	else if (str[0] == '|' && str[1] == '|')
-	{
-		token->type = SPECIAL_CHAR;
-		token->content = ft_strdup("||");
 		*i += 1;
 	}
 	else if (str[0] == '>' && str[1] == '>')

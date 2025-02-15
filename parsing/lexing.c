@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:40:59 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/14 20:55:49 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/15 15:53:50 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,23 +50,6 @@ int	check_quotes(char *str)
 			i++;
 	}
 	return(0);
-}
-
-int	check_special_char(t_token **tokens)
-{
-	int	i;
-
-	i = 0;
-	while(tokens[i])
-	{
-		if (tokens[i]->type == SPECIAL_CHAR)
-		{
-			printf("syntax error non supported character %s\n", tokens[i]->content);
-			return (1);
-		}
-		i++;
-	}
-	return (0);
 }
 
 int	is_operation(int i)
@@ -123,8 +106,6 @@ void	check_tokens(t_token **tokens)
 
 	i = 0;
 	if (tokens[i] == NULL)
-		return ;
-	if (check_special_char(tokens) == 1)
 		return ;
 	if (check_consecutive_expressions(tokens) == 1)
 		return ;
