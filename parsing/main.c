@@ -6,20 +6,21 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 13:46:07 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:56:05 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	main()
 {
 	char *line;
 	t_token	**tokens;
-	// int token_size;
+	t_alloc *garbage;
 
 	while(1)
 	{
+		garbage = NULL;
 		line = readline("-> minishell ");
 		if (!line)
 		{
@@ -30,17 +31,14 @@ int	main()
 			add_history(line);
 		if (check_quotes(line) != 1)
 		{
-			tokens = tokenize(line);
+			tokens = tokenize(line, &garbage);
 			check_tokens(tokens);
-			expanding(tokens);
+			expanding(tokens, &garbage);
 			for(int i = 0; tokens[i]; i++)
-			{
 				printf("%s\n", tokens[i]->content);
-				free(tokens[i]->content);
-				free(tokens[i]);
-			}
-			free(tokens);
 		}
-		free(line);
+		ft_lstclear_garbage(&garbage);
 	}
+		ft_lstclear_garbage(&garbage);
+
 }

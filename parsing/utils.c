@@ -6,11 +6,11 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:28:07 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/15 18:06:20 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:15:38 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -57,13 +57,13 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(const char *s1, t_alloc **head)
 {
 	size_t	i;
 	char	*s2;
 
 	i = ft_strlen(s1);
-	s2 = (char *)malloc(i + 1);
+	s2 = ft_malloc(i + 1, head);
 	if (s2 == NULL)
 		return (NULL);
 	i = 0;
@@ -83,7 +83,7 @@ int	ft_isprint(int c)
 	return (0);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2, t_alloc **head)
 {
 	char	*str;
 	size_t	i;
@@ -92,10 +92,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (s1 == NULL && s2 == NULL)
 		return (NULL);
 	if (s1 == NULL)
-		return (ft_strdup(s2));
+		return (ft_strdup(s2, head));
 	else if (s2 == NULL)
-		return (ft_strdup(s1));
-	str = (char *) malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+		return (ft_strdup(s1, head));
+	str = ft_malloc(ft_strlen(s1) + ft_strlen(s2) + 1, head);
 	if (str == NULL)
 		return (NULL);
 	i = 0;

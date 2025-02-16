@@ -6,11 +6,11 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:16:39 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/15 18:07:29 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:02:55 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static int	is_seperator(char c, char sep)
 {
@@ -40,7 +40,7 @@ static size_t	word_count(char const *s, char sep)
 	return (wc);
 }
 
-static char	*ft_allocate(char const *s, char sep)
+static char	*ft_allocate(char const *s, char sep, t_alloc **head)
 {
 	size_t	i;
 	char	*ptr;
@@ -49,9 +49,7 @@ static char	*ft_allocate(char const *s, char sep)
 	len = 0;
 	while (s[len] && !is_seperator(s[len], sep))
 		len++;
-	ptr = (char *) malloc(len + 1);
-	if (ptr == NULL)
-		return (NULL);
+	ptr = ft_malloc(len + 1, head);
 	i = 0;
 	while (i < len)
 	{
@@ -62,32 +60,14 @@ static char	*ft_allocate(char const *s, char sep)
 	return (ptr);
 }
 
-static void	*ft_free(char **strs, size_t count)
-{
-	size_t	i;
-
-	if (strs == NULL)
-		return (NULL);
-	i = 0;
-	while (i < count)
-	{
-		free(strs[i]);
-		i++;
-	}
-	free(strs);
-	return (NULL);
-}
-
-char	**ft_split(char const *s, char sep)
+char	**ft_split(char const *s, char sep, t_alloc **head)
 {
 	char	**arr;
 	size_t	i;
 
 	if (s == NULL)
 		return (NULL);
-	arr = malloc (sizeof(char *) * (word_count(s, sep) + 1));
-	if (arr == NULL)
-		return (NULL);
+	arr = ft_malloc(sizeof(char *) * (word_count(s, sep) + 1), head);
 	i = 0;
 	while (*s)
 	{
@@ -95,9 +75,7 @@ char	**ft_split(char const *s, char sep)
 			s++;
 		if (*s && !is_seperator(*s, sep))
 		{
-			arr[i] = ft_allocate(s, sep);
-			if (arr[i] == NULL)
-				return (ft_free(arr, i));
+			arr[i] = ft_allocate(s, sep, head);
 			i++;
 			while (*s && !is_seperator(*s, sep))
 				s++;
