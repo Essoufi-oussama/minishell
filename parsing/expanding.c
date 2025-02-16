@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 13:45:39 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/16 16:17:58 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,12 @@ char	*get_expanded_value(char *token, int i, int *j)
 		(*j)++;
 		return (expanded);
 	}
-	while (token[i + *j] && token[i + *j] != '$')
+	while (token[i + *j] && (token[i + *j] != '$'))
+	{
+		if(token[i + *j] == '\'' || token[i + *j] == '\"')
+			break ;
 		(*j)++;
+	}
 	expanded = malloc(sizeof(char) * (*j + 1));
 	ft_strlcpy(expanded, token + i, *j + 1);
 	if (!getenv(expanded))
