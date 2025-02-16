@@ -105,7 +105,7 @@ char	*handle_quoted_token(char *token)
 	while(token[j] && token[j] == ' ')
 		j++;
 	if (i == 1)
-		token = ft_strjoin(create_spaces(j) ,strs[0]);
+		temp = ft_strjoin(create_spaces(j) ,strs[0]);
 	else
 	{
 		temp = ft_strjoin(create_spaces(j), strs[0]);
