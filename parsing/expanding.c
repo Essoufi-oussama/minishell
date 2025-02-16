@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/15 21:57:03 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/16 12:49:54 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char    *build_expanded_string(char *token, char *previous, int i)
     k = 0;
     if (token[i] == '?')
     {
-        expanded = ft_strdup("0");// ghanchanjiha lakhir status code kin3rf kindir
+        expanded = ft_strdup("0");
         j++;
     }
     else
@@ -32,18 +32,12 @@ char    *build_expanded_string(char *token, char *previous, int i)
             j++;
         expanded = malloc(sizeof(char) * (j + 1));
         ft_strlcpy(expanded, token + i, j + 1);
-        if (getenv(expanded))
-		{
-            expanded = ft_strdup(getenv(expanded));
-    		previous = malloc(sizeof(char) * (i));
-    		ft_strlcpy(previous, token, i);
-		}
-        else
-		{
-           	previous = malloc(sizeof(char) * (i + 1));
-    		ft_strlcpy(previous, token, i + 1);
-		}
+		if (!getenv(expanded))
+			return(token);
+		expanded = ft_strdup(getenv(expanded));
     }
+	previous = malloc(sizeof(char) * (i));
+	ft_strlcpy(previous, token, i);
     while(token[i + j + k])
         k++;
     next = malloc(sizeof(char) *(k + 1));
@@ -52,14 +46,16 @@ char    *build_expanded_string(char *token, char *previous, int i)
     token = ft_strjoin(token, next);
     return(token);
 }
+
 char	*expand_token(char *token)
 {
 	char	*previous;
 	
 	int		i;
+
 	i = 0;
 	previous = NULL;
-	while(ft_strchr(token, '$'))
+	while(ft_strchr(token , '$'))
 	{
 		while (token[i] && token[i] != '$')
 			i++;
@@ -92,8 +88,9 @@ char	*handle_quoted_token(char *token)
 	char **strs;
 	int		i;
 	char	*temp;
-	int j = 0;
+	int j;
 
+	j = 0;
 	i = 0;	
 	strs = ft_split(token, ' ');
 	while(strs[i])
