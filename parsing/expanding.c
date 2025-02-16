@@ -72,32 +72,58 @@ char	*expand_token(char *token)
 	return (token);
 }
 
-void	handle_quoted_token(t_token *token)
+char	*create_spaces(int count)
+{
+	char *str;
+	int i;
+
+	str = malloc(sizeof(char) *(count + 1));
+	i = 0;
+	while(i < count)
+		str[i++] = ' ';
+	str[i] = '\0';
+	return (str);
+}
+
+// akhra code ktbt f7yati but it works
+
+char	*handle_quoted_token(char *token)
 {
 	char **strs;
 	int		i;
+	char	*temp;
+	int j = 0;
 
 	i = 0;	
-	strs = ft_split(token->content, ' ');
+	strs = ft_split(token, ' ');
 	while(strs[i])
 	{
 		if (ft_strchr(strs[i], '$'))
 			strs[i] = expand_token(strs[i]);
 		i++;
 	}
+	while(token[j] && token[j] == ' ')
+		j++;
 	if (i == 1)
-		token->content = strs[0];
+		token = ft_strjoin(create_spaces(j) ,strs[0]);
 	else
 	{
-		token->content = strs[0];
+		temp = ft_strjoin(create_spaces(j), strs[0]);
 		i = 1;
 		while(strs[i])
 		{
-			token->content = ft_strjoin(token->content, " ");
-			token->content = ft_strjoin(token->content, strs[i]);
+			while(token[j] && token[j] != ' ')
+				j++;
+			token   = token + j;
+			j = 0;
+			while(token[j] && token[j] == ' ')
+				j++;
+			temp = ft_strjoin(temp, create_spaces(j));
+			temp = ft_strjoin(temp, strs[i]);
 			i++;
 		}
 	}
+	return (temp);
 }
 
 void	expanding(t_token **tokens)
@@ -112,7 +138,7 @@ void	expanding(t_token **tokens)
 			if (tokens[i]->quoted != D_QUOTE)
 				tokens[i]->content = expand_token(tokens[i]->content);
 			else
-				handle_quoted_token(tokens[i]);
+				tokens[i]->content = handle_quoted_token(tokens[i]->content);
 		}
 		i++;		
 	}

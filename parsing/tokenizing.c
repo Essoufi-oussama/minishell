@@ -113,12 +113,9 @@ void	loop_token_arr(char *str, t_token **token_arr)
 t_token **tokenize(char *str)
 {
     int tokens_count;
-    int i;
-    int j;
+
     t_token **token_arr;
 
-	i = 0;
-	j = 0;
     tokens_count = count_tokens(str);
     token_arr = malloc(sizeof(t_token *) * (tokens_count + 1));
     loop_token_arr(str, token_arr);

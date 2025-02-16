@@ -62,7 +62,7 @@ void	loop_token_arr(char *str, t_token **token_arr);
 
 void	expanding(t_token **tokens);
 char	*build_expanded_string(char *token, char *previous, int i);
-void	handle_quoted_token(t_token *token);
+char	*handle_quoted_token(char *token);
 char	*expand_token(char *token);
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize);
