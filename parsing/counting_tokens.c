@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 16:23:14 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 17:30:45 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/16 19:34:08 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,16 @@ int	handle_quotes(char *str, int *i, char quote_char)
 	{
 		count++;
 		(*i)++;
+		if (str[*i] == quote_char)
+		{
+			(*i)++;
+			return (count);
+		}
 		while (str[*i] && str[*i] != quote_char)
 			(*i)++;
-		if (str[*i] == quote_char)
-			(*i)++;
 	}
+	if (str[*i] == quote_char)
+			(*i)++;
 	return (count);
 }
 
@@ -48,9 +53,9 @@ int	count_tokens(char *str)
 	count = 0;
 	while (str[i])
 	{
-		count += handle_quotes(str, &i, '\'');
-		count += handle_quotes(str, &i, '\"');
-		if (is_word_char(str[i]) || to_handle(str[i]))
+		if (str[i] == '\'' || str[i] == '\"')
+			count += handle_quotes(str, &i, str[i]);
+		else if (is_word_char(str[i]) || to_handle(str[i]))
 		{
 			count++;
 			if (is_word_char(str[i]))
@@ -60,9 +65,10 @@ int	count_tokens(char *str)
 				i++;
 			else if (str[i] == '<' && str[i + 1] == '<')
 				i++;
+			i++;
 		}
-		if (str[i])
-			i++ ;
+		else
+			i++;
 	}
 	return (count);
 }

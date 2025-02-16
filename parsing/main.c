@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 18:56:05 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/16 19:36:39 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,10 @@ int	main()
 			tokens = tokenize(line, &garbage);
 			check_tokens(tokens);
 			expanding(tokens, &garbage);
-			for(int i = 0; tokens[i]; i++)
-				printf("%s\n", tokens[i]->content);
+			// for(int i = 0; tokens[i]; i++)
+			// 	printf("%s\n", tokens[i]->content);
 		}
 		ft_lstclear_garbage(&garbage);
 	}
-		ft_lstclear_garbage(&garbage);
 
 }
