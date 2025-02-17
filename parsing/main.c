@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 19:36:39 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/17 20:55:40 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ int	main()
 			expanding(tokens, &garbage);
 			for(int i = 0; tokens[i]; i++)
 			{
-				if (tokens[i]->part_of_previous)
-					printf("part of previous ");
+				// if (tokens[i]->part_of_previous)
+				// 	printf("part of previous ");
 				printf("%s\n", tokens[i]->content);
 			}
 		}
