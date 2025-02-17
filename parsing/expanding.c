@@ -32,7 +32,7 @@ char	*get_expanded_value(char *token, int i, int *j, t_alloc **head)
 	expanded = ft_malloc(sizeof(char) * (*j + 1), head);
 	ft_strlcpy(expanded, token + i, *j + 1);
 	if (!getenv(expanded))
-		return (NULL);
+		return (ft_strdup("", head));
 	return (ft_strdup(getenv(expanded), head));
 }
 
@@ -45,8 +45,6 @@ char	*build_exp_str(char *token, char *previous, int i, t_alloc **head)
 
 	k = 0;
 	expanded = get_expanded_value(token, i, &j, head);
-	if (!expanded)
-		return (token);
 	previous = ft_malloc(sizeof(char) * i, head);
 	ft_strlcpy(previous, token, i);
 	while (token[i + j + k])

@@ -14,7 +14,12 @@
 
 int	is_word_char(char c)
 {
-	return (!to_handle(c) && ft_isprint(c) && c != '\'' && c != '\"');
+	return (!to_handle(c) && ft_isprint(c));
+}
+
+int	is_quote(char c)
+{
+	return (c == '\'' || c == '\"');
 }
 
 int	to_handle(char c)
@@ -55,11 +60,11 @@ int	count_tokens(char *str)
 	{
 		if (str[i] == '\'' || str[i] == '\"')
 			count += handle_quotes(str, &i, str[i]);
-		else if (is_word_char(str[i]) || to_handle(str[i]))
+		else if ((is_word_char(str[i]) || to_handle(str[i])) && !is_quote(str[i]))
 		{
 			count++;
-			if (is_word_char(str[i]))
-				while (str[i] && is_word_char(str[i + 1]))
+			if (is_word_char(str[i]) && !is_quote(str[i]))
+				while (str[i] && is_word_char(str[i + 1]) && !is_quote(str[i + 1]))
 					i++;
 			if (str[i] == '>' && str[i + 1] == '>')
 				i++;
@@ -78,7 +83,7 @@ int	count_no_quotes(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] && str[i] != ' ' && is_word_char(str[i]))
+	while (str[i] && str[i] != ' ' && is_word_char(str[i]) && !is_quote(str[i]))
 		i++ ;
 	return (i);
 }

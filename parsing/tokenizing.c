@@ -20,16 +20,28 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote, t_alloc **head)
 
 	j = 0;
 	token = ft_malloc(sizeof(t_token), head);
+	token->part_of_previous = 0;
+	if (quote == D_QUOTE || quote == S_QUOTE)
+	{
+		if (*i - 1 > 0 && is_word_char(str[*i - 2]))
+			token->part_of_previous = 1;
+	}
+	else if (quote == NO_QUOTE)
+	{
+		if (*i > 0 && is_word_char(str[*i - 1]) && str[*i - 1] != ' ')
+			token->part_of_previous = 1;
+	}
+
 	if (quote == S_QUOTE)
-		while (str[j] && str[j] != '\'')
+		while (str[*i + j] && str[*i + j] != '\'')
 			j++;
 	else if (quote == D_QUOTE)
-		while (str[j] && str[j] != '\"')
+		while (str[*i + j] && str[*i + j] != '\"')
 			j++;
 	else
-		j = count_no_quotes(str);
+		j = count_no_quotes(str + *i);
 	new = ft_malloc(sizeof(char) * (j + 1), head);
-	ft_strlcpy(new, str, j + 1);
+	ft_strlcpy(new, str + *i, j + 1);
 	if ((quote == D_QUOTE || quote == NO_QUOTE) && ft_strchr(new, '$'))
 		token->expandable = 1;
 	else
@@ -77,6 +89,7 @@ t_token	*insert_token_arr_op(int *i, char *str, t_alloc **head)
 		insert_other_ops(token, str, head);
 	token->quoted = 0;
 	token->expandable = 0;
+	token->part_of_previous = 0;
 	*i += 1;
 	return (token);
 }
@@ -90,18 +103,18 @@ void	loop_token_arr(char *str, t_token **token_arr, t_alloc **head)
 	j = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '\"')
+		if (is_quote(str[i]))
 		{
 			if (!str[++i])
 				break ;
 			if (str[i - 1] == '\'')
-				token_arr[j++] = insert_token_arr_word(&i, str + i, S_QUOTE, head);
+				token_arr[j++] = insert_token_arr_word(&i, str, S_QUOTE, head);
 			else if (str[i - 1] == '\"')
-				token_arr[j++] = insert_token_arr_word(&i, str + i, D_QUOTE, head);
+				token_arr[j++] = insert_token_arr_word(&i, str, D_QUOTE, head);
 			i++;
 		}
-		else if (is_word_char(str[i]))
-			token_arr[j++] = insert_token_arr_word(&i, str + i, NO_QUOTE, head);
+		else if (is_word_char(str[i]) && !is_quote(str[i]))
+			token_arr[j++] = insert_token_arr_word(&i, str, NO_QUOTE, head);
 		else if (to_handle(str[i]))
 			token_arr[j++] = insert_token_arr_op(&i, str + i, head);
 		else

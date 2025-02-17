@@ -34,8 +34,12 @@ int	main()
 			tokens = tokenize(line, &garbage);
 			check_tokens(tokens);
 			expanding(tokens, &garbage);
-			// for(int i = 0; tokens[i]; i++)
-			// 	printf("%s\n", tokens[i]->content);
+			for(int i = 0; tokens[i]; i++)
+			{
+				if (tokens[i]->part_of_previous)
+					printf("part of previous ");
+				printf("%s\n", tokens[i]->content);
+			}
 		}
 		ft_lstclear_garbage(&garbage);
 	}

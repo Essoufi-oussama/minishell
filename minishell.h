@@ -35,6 +35,7 @@ typedef struct s_token
 	int		type;
 	int		quoted;
 	int		expandable;
+	int		part_of_previous;
 	char	*content;
 }	t_token;
 
@@ -72,6 +73,7 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote, t_alloc **head);
 t_token	*insert_token_arr_op(int *i, char *str, t_alloc **head);
 
 void	expanding(t_token **tokens, t_alloc **head);
+
 char	*build_exp_str(char *token, char *previous, int i, t_alloc **head);
 char	*handle_quoted_token(char *token, t_alloc **head);
 char	*expand_token(char *token, t_alloc **head);
@@ -86,6 +88,7 @@ char	*ft_strdup(const char *s1, t_alloc **head);
 int		ft_isprint(int c);
 char	*ft_strjoin(char const *s1, char const *s2, t_alloc **head);
 char	**ft_split(char const *s, char sep, t_alloc **head);
+int		is_quote(char c);
 
 void	ft_lstclear_garbage(t_alloc **lst);
 void	ft_lstadd_front(t_alloc **lst, t_alloc *new);
