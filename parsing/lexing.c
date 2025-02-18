@@ -86,15 +86,16 @@ int	check_end_and_pipe(t_token **tokens)
 	return (0);
 }
 
-void	lexing(t_token **tokens)
+int	lexing(t_token **tokens)
 {
 	int	i;
 
 	i = 0;
 	if (tokens[i] == NULL)
-		return ;
+		return (0);
 	if (check_consecutive_expressions(tokens) == 1)
-		return ;
+		return (0);
 	if (check_end_and_pipe(tokens) == 1)
-		return ;
+		return (0);
+	return (1);
 }

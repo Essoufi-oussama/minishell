@@ -33,8 +33,8 @@ int	main(int argc, char **argv, char **env)
 	t_data	*data;
 
 	data = env_init(env);
-	argc = 0;
-	argv = NULL;
+	(void)argc;
+	(void)argv;
 	while(1)
 	{
 		data->alloc = NULL;		
@@ -49,15 +49,11 @@ int	main(int argc, char **argv, char **env)
 		if (check_quotes(data->line) != 1)
 		{
 			tokenize(data);
-			lexing(data->tokens);
-			expanding(data);
-			// for(int i = 0; data->tokens[i]; i++)
-			// {
-			// 	if (data->tokens[i]->part_of_previous)
-			// 		printf("part of previous ");
-			// 	printf("%s\n", data->tokens[i]->content);
-			// }
-			parse(data);
+			if (lexing(data->tokens) == 1)
+			{
+				expanding(data);
+				parse(data);
+			}
 		}
 		ft_lstclear_garbage(&data->alloc);
 	}

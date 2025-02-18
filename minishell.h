@@ -79,7 +79,7 @@ typedef	struct s_data
 }	t_data;
 
 int		count_tokens(char *str);
-void	lexing(t_token **tokens);
+int		lexing(t_token **tokens);
 int		check_quotes(char *str);
 int		is_operation(int i);
 int		check_special_char(t_token **tokens);

@@ -88,7 +88,7 @@ char	*get_full_name(t_token **tokens, int *i, t_data *data)
 		name = ft_strjoin(name, tokens[*i]->content, data);
 		(*i)++;
 	}
-	printf("%s\n", name);
+	// printf("%s\n", name);
 	return (name);
 }
 
@@ -191,12 +191,41 @@ void	parse(t_data *data)
 		tokens = tokens + j;
 	}
 	data->commands[i] = NULL;
-	i = 0;
+	// i = 0;
 	// while(data->commands[i])
 	// {
-	// 	j = 0;
-	// 	while(data->commands[i]->args[j])
-	// 		printf("%s\n", data->commands[i]->args[j++]);
+	// 	j = -1;
+	// 	printf("command n: %d\n", i);
+	// 	while(data->commands[i]->args[++j])
+	// 		printf("arg number %d: %s \n", j, data->commands[i]->args[j]);
+	// 	printf("     list of infiles: ");
+	// 	if (data->commands[i]->infiles == NULL)
+	// 		printf("No infiles!");
+	// 	else 
+	// 	{
+	// 		t_redir *current = data->commands[i]->infiles;
+	// 		while(current)
+	// 		{
+	// 			if (current->type == HERE_DOC)
+	// 				printf("here_doc with limiter: ");					
+	// 			printf("%s ", current->name);
+	// 			current = current->next;
+	// 		}
+	// 	}
+	// 	printf("        list of outfiles: ");
+	// 	if (data->commands[i]->outfiles == NULL)
+	// 		printf("No outfiles!");
+	// 	else 
+	// 	{
+	// 		t_redir *current = data->commands[i]->outfiles;
+	// 		while(current)
+	// 		{
+	// 			printf("%s ", current->name);
+	// 			current = current->next;
+	// 		}
+	// 	}
+	// 	printf("\n");
+		
 	// 	i++;
 	// }
 }
