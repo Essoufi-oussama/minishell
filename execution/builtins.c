@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:49:21 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/02/18 19:49:22 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/02/18 19:51:24 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
-
+#include "minishell.h"
 // {"echo", "-n" , "hello", "world",NULL};
 // {"echo", "hello","world",NULL};
 
@@ -50,14 +50,4 @@ void cd(char **str)
     if(chdir(str[1]) != 0)
         perror("No such file or directory");
     
-}
-
-int main()
-{
-    char *args[] = {"echo", "-nnnn","hhh",NULL};
-    t_data *data;
-    t_command commands = data->commands;
-    {struct1, struct2, NULL}
-    struct1->args;
-    struct1->infiles;
 }

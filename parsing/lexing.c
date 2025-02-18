@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:40:59 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 17:31:06 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:46:29 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	check_end_and_pipe(t_token **tokens)
 	return (0);
 }
 
-void	check_tokens(t_token **tokens)
+void	lexing(t_token **tokens)
 {
 	int	i;
 

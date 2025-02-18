@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 14:11:30 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 22:06:39 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,9 @@ typedef	struct s_alloc
 typedef struct s_redir
 {
 	char	*name;
-	char	*here_doc_limiter;
 	int		type;
 	int		here_doc_expandable;
-	struct s_redirect *next;
+	struct s_redir *next;
 }	t_redir;
 
 
@@ -73,14 +72,14 @@ typedef	struct s_data
 {
 	char	*line;
 	char	**env;
-	t_command	**comands;
-	t_token		**tokens;
 	int	exit_status;
+	t_command	**commands;
+	t_token		**tokens;
 	t_alloc	*alloc;
 }	t_data;
 
 int		count_tokens(char *str);
-void	check_tokens(t_token **tokens);
+void	lexing(t_token **tokens);
 int		check_quotes(char *str);
 int		is_operation(int i);
 int		check_special_char(t_token **tokens);
@@ -107,6 +106,10 @@ char	*create_spaces(int count, t_data *data);
 char	*join_tokens(char **strs, char *token, int j, t_data *data);
 char	*get_expanded_value(char *token, int i, int *j, t_data *data);
 int	skip_here_doc_limiter(t_token **tokens, int current);
+
+void	parse(t_data *data);
+int	count_commands(t_token **tokens);
+
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize);
 char	*ft_strchr(const char *s, int c);
