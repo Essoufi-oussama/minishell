@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 18:23:18 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:25:02 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,23 @@ typedef	struct s_alloc
 	struct s_alloc	*next;
 }	t_alloc;
 
+typedef	struct s_command
+{
+	char *name;
+	char	**args;
+	
+}	t_command;
+
+
+typedef	struct s_data
+{
+	char	*line;
+	char	**env;
+	t_command	**comands;
+	t_token		**tokens;
+	int	exit_status;
+	t_alloc	*alloc;
+}	t_data;
 
 int		count_tokens(char *str);
 void	check_tokens(t_token **tokens);
@@ -66,31 +83,32 @@ int		count_no_quotes(char *str);
 int		check_consecutive_expressions(t_token **tokens);
 int		check_end_and_pipe(t_token **tokens);
 
-t_token	**tokenize(char *str, t_alloc **head);
-void	loop_token_arr(char *str, t_token **token_arr, t_alloc **head);
-void	insert_other_ops(t_token *token, char *str, t_alloc **head);
-t_token	*insert_token_arr_word(int *i, char *str, int quote, t_alloc **head);
-t_token	*insert_token_arr_op(int *i, char *str, t_alloc **head);
+void	tokenize(t_data *data);
+void	loop_token_arr(char *str, t_token **token_arr, t_data *data);
+void	insert_other_ops(t_token *token, char *str, t_data *data);
+t_token	*insert_token_arr_word(int *i, char *str, int quote, t_data *data);
+t_token	*insert_token_arr_op(int *i, char *str, t_data *data);
 
-void	expanding(t_token **tokens, t_alloc **head);
-
-char	*build_exp_str(char *token, char *previous, int i, t_alloc **head);
-char	*handle_quoted_token(char *token, t_alloc **head);
-char	*expand_token(char *token, t_alloc **head);
-char	*create_spaces(int count, t_alloc **head);
-char	*join_tokens(char **strs, char *token, int j, t_alloc **head);
-char	*get_expanded_value(char *token, int i, int *j, t_alloc **head);
+void	expanding(t_data *data);
+char	*handle_multiple_dollars(char	*token, int count, int i, t_data *data);
+char	*build_exp_str(char *token, char *previous, int i, t_data *data);
+char	*handle_quoted_token(char *token, t_data *data);
+char	*expand_token(char *token, t_data *data);
+char	*create_spaces(int count, t_data *data);
+char	*join_tokens(char **strs, char *token, int j, t_data *data);
+char	*get_expanded_value(char *token, int i, int *j, t_data *data);
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);
-char	*ft_strdup(const char *s1, t_alloc **head);
+char	*ft_strdup(const char *s1, t_data *data);
 int		ft_isprint(int c);
-char	*ft_strjoin(char const *s1, char const *s2, t_alloc **head);
-char	**ft_split(char const *s, char sep, t_alloc **head);
+char	*ft_strjoin(char const *s1, char const *s2, t_data *data);
+char	**ft_split(char const *s, char sep, t_data *data);
 int		is_quote(char c);
+char	*ft_itoa(int n, t_data *data);
 
 void	ft_lstclear_garbage(t_alloc **lst);
 void	ft_lstadd_front(t_alloc **lst, t_alloc *new);
-void	*ft_malloc(size_t size, t_alloc **head);
+void	*ft_malloc(size_t size, t_data *data);
 #endif

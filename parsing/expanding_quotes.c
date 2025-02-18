@@ -6,18 +6,18 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:38:17 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 18:19:54 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:21:30 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*create_spaces(int count, t_alloc **head)
+char	*create_spaces(int count, t_data *data)
 {
 	char	*str;
 	int		i;
 
-	str = ft_malloc(sizeof(char) * (count + 1), head);
+	str = ft_malloc(sizeof(char) * (count + 1), data);
 	i = 0;
 	while (i < count)
 		str[i++] = ' ';
@@ -25,13 +25,13 @@ char	*create_spaces(int count, t_alloc **head)
 	return (str);
 }
 
-char	*join_tokens(char **strs, char *token, int j, t_alloc **head)
+char	*join_tokens(char **strs, char *token, int j, t_data *data)
 {
 	char	*temp;
 	int		i;
 
 	i = 1;
-	temp = ft_strjoin(create_spaces(j, head), strs[0], head);
+	temp = ft_strjoin(create_spaces(j, data), strs[0], data);
 	while (strs[i])
 	{
 		while (token[j] && token[j] != ' ')
@@ -40,14 +40,14 @@ char	*join_tokens(char **strs, char *token, int j, t_alloc **head)
 		j = 0;
 		while (token[j] && token[j] == ' ')
 			j++;
-		temp = ft_strjoin(temp, create_spaces(j, head), head);
-		temp = ft_strjoin(temp, strs[i], head);
+		temp = ft_strjoin(temp, create_spaces(j, data), data);
+		temp = ft_strjoin(temp, strs[i], data);
 		i++;
 	}
 	return (temp);
 }
 
-char	*handle_quoted_token(char *token, t_alloc **head)
+char	*handle_quoted_token(char *token, t_data *data)
 {
 	char	**strs;
 	int		i;
@@ -55,16 +55,16 @@ char	*handle_quoted_token(char *token, t_alloc **head)
 
 	j = 0;
 	i = 0;
-	strs = ft_split(token, ' ', head);
+	strs = ft_split(token, ' ', data);
 	while (strs[i])
 	{
 		if (ft_strchr(strs[i], '$'))
-			strs[i] = expand_token(strs[i], head);
+			strs[i] = expand_token(strs[i], data);
 		i++;
 	}
 	while (token[j] && token[j] == ' ')
 		j++;
 	if (i == 1)
-		return (ft_strjoin(create_spaces(j, head), strs[0], head));
-	return (join_tokens(strs, token, j, head));
+		return (ft_strjoin(create_spaces(j, data), strs[0], data));
+	return (join_tokens(strs, token, j, data));
 }

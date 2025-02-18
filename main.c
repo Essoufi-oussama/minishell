@@ -6,42 +6,59 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/17 20:55:40 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:25:22 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
-int	main()
+t_data	*env_init(char **env)
 {
-	char *line;
-	t_token	**tokens;
-	t_alloc *garbage;
+	t_data	*data;
 
+	data = malloc(sizeof(t_data));
+	if(!data)
+		exit(1) ;
+	data->env = env;
+	data->exit_status = 0;
+	data->comands = NULL;
+	data->line = NULL;
+	data->tokens = NULL;
+	return (data);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	
+	t_data	*data;
+
+	data = env_init(env);
+	argc = 0;
+	argv = NULL;
 	while(1)
 	{
-		garbage = NULL;
-		line = readline("-> minishell ");
-		if (!line)
+		data->alloc = NULL;		
+		data->line = readline("-> minishell ");
+		if (!data->line)
 		{
 			printf("exit\n");
 			exit(1);
 		}
-		if (strlen(line) > 0)
-			add_history(line);
-		if (check_quotes(line) != 1)
+		if (strlen(data->line) > 0)
+			add_history(data->line);
+		if (check_quotes(data->line) != 1)
 		{
-			tokens = tokenize(line, &garbage);
-			check_tokens(tokens);
-			expanding(tokens, &garbage);
-			for(int i = 0; tokens[i]; i++)
+			tokenize(data);
+			check_tokens(data->tokens);
+			expanding(data);
+			for(int i = 0; data->tokens[i]; i++)
 			{
 				// if (tokens[i]->part_of_previous)
 				// 	printf("part of previous ");
-				printf("%s\n", tokens[i]->content);
+				printf("%s\n", data->tokens[i]->content);
 			}
 		}
-		ft_lstclear_garbage(&garbage);
+		ft_lstclear_garbage(&data->alloc);
 	}
 
 }

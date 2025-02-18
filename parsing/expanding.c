@@ -6,22 +6,21 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/17 20:55:20 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:12:01 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_expanded_value(char *token, int i, int *j, t_alloc **head)
+char	*get_expanded_value(char *token, int i, int *j, t_data *data)
 {
 	char	*expanded;
 
 	*j = 0;
 	if (token[i] == '?')
 	{
-		expanded = ft_strdup("0", head);
 		(*j)++;
-		return (expanded);
+		return (ft_itoa(data->exit_status, data));
 	}
 	while (token[i + *j] && (token[i + *j] != '$'))
 	{
@@ -29,14 +28,14 @@ char	*get_expanded_value(char *token, int i, int *j, t_alloc **head)
 			break ;
 		(*j)++;
 	}
-	expanded = ft_malloc(sizeof(char) * (*j + 1), head);
+	expanded = ft_malloc(sizeof(char) * (*j + 1), data);
 	ft_strlcpy(expanded, token + i, *j + 1);
 	if (!getenv(expanded))
-		return (ft_strdup("", head));
-	return (ft_strdup(getenv(expanded), head));
+		return (ft_strdup("", data));
+	return (ft_strdup(getenv(expanded), data));
 }
 
-char	*build_exp_str(char *token, char *previous, int i, t_alloc **head)
+char	*build_exp_str(char *token, char *previous, int i, t_data *data)
 {
 	char	*next;
 	char	*expanded;
@@ -44,19 +43,19 @@ char	*build_exp_str(char *token, char *previous, int i, t_alloc **head)
 	int		k;
 
 	k = 0;
-	expanded = get_expanded_value(token, i, &j, head);
-	previous = ft_malloc(sizeof(char) * i, head);
+	expanded = get_expanded_value(token, i, &j, data);
+	previous = ft_malloc(sizeof(char) * i, data);
 	ft_strlcpy(previous, token, i);
 	while (token[i + j + k])
 		k++;
-	next = ft_malloc(sizeof(char) * (k + 1), head);
+	next = ft_malloc(sizeof(char) * (k + 1), data);
 	ft_strlcpy(next, token + i + j, k + 1);
-	token = ft_strjoin(previous, expanded, head);
-	token = ft_strjoin(token, next, head);
+	token = ft_strjoin(previous, expanded, data);
+	token = ft_strjoin(token, next, data);
 	return (token);
 }
 
-char	*handle_multiple_dollars(char	*token, int count, int i, t_alloc **head)
+char	*handle_multiple_dollars(char	*token, int count, int i, t_data *data)
 {
 	char	*previous;
 	char	*expanded;
@@ -65,20 +64,20 @@ char	*handle_multiple_dollars(char	*token, int count, int i, t_alloc **head)
 
 	if (count % 2 != 0)
 		count--;
-	expanded = ft_strdup("", head);
-	previous = ft_malloc(sizeof(char) * i + 1, head);
+	expanded = ft_strdup("", data);
+	previous = ft_malloc(sizeof(char) * i + 1, data);
 	ft_strlcpy(previous, token, i + 1);
 	k = 0;
 	while(token[i + count + k])
 		k++;
-	next = ft_malloc(sizeof(char)* (k + 1), head);
+	next = ft_malloc(sizeof(char)* (k + 1), data);
 	ft_strlcpy(next, token + i + count, k + 1);
-	token = ft_strjoin(previous, expanded, head);
-	token = ft_strjoin(token, next, head);
+	token = ft_strjoin(previous, expanded, data);
+	token = ft_strjoin(token, next, data);
 	return (token);
 }
 
-char	*expand_token(char *token, t_alloc **head)
+char	*expand_token(char *token, t_data *data)
 {
 	char	*previous;
 	int		i;
@@ -96,26 +95,28 @@ char	*expand_token(char *token, t_alloc **head)
 		if (count == 1 && token[i] && !token[i + count])
 			break;
 		if (count > 1)
-			token = handle_multiple_dollars(token, count, i, head);
+			token = handle_multiple_dollars(token, count, i, data);
 		else
-			token = build_exp_str(token, previous, i + count, head);
+			token = build_exp_str(token, previous, i + count, data);
 	}
 	return (token);
 }
 
-void	expanding(t_token **tokens, t_alloc **head)
+void	expanding(t_data *data)
 {
 	int	i;
+	t_token **tokens;
 
+	tokens = data->tokens;
 	i = 0;
 	while (tokens[i])
 	{
 		if (tokens[i]->expandable)
 		{
 			if (tokens[i]->quoted != D_QUOTE)
-				tokens[i]->content = expand_token(tokens[i]->content, head);
+				tokens[i]->content = expand_token(tokens[i]->content, data);
 			else
-				tokens[i]->content = handle_quoted_token(tokens[i]->content, head);
+				tokens[i]->content = handle_quoted_token(tokens[i]->content, data);
 		}
 		i++;
 	}

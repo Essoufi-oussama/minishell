@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:16:39 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 18:02:55 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:25:56 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static size_t	word_count(char const *s, char sep)
 	return (wc);
 }
 
-static char	*ft_allocate(char const *s, char sep, t_alloc **head)
+static char	*ft_allocate(char const *s, char sep, t_data *data)
 {
 	size_t	i;
 	char	*ptr;
@@ -49,7 +49,7 @@ static char	*ft_allocate(char const *s, char sep, t_alloc **head)
 	len = 0;
 	while (s[len] && !is_seperator(s[len], sep))
 		len++;
-	ptr = ft_malloc(len + 1, head);
+	ptr = ft_malloc(len + 1, data);
 	i = 0;
 	while (i < len)
 	{
@@ -60,14 +60,14 @@ static char	*ft_allocate(char const *s, char sep, t_alloc **head)
 	return (ptr);
 }
 
-char	**ft_split(char const *s, char sep, t_alloc **head)
+char	**ft_split(char const *s, char sep, t_data *data)
 {
 	char	**arr;
 	size_t	i;
 
 	if (s == NULL)
 		return (NULL);
-	arr = ft_malloc(sizeof(char *) * (word_count(s, sep) + 1), head);
+	arr = ft_malloc(sizeof(char *) * (word_count(s, sep) + 1), data);
 	i = 0;
 	while (*s)
 	{
@@ -75,7 +75,7 @@ char	**ft_split(char const *s, char sep, t_alloc **head)
 			s++;
 		if (*s && !is_seperator(*s, sep))
 		{
-			arr[i] = ft_allocate(s, sep, head);
+			arr[i] = ft_allocate(s, sep, data);
 			i++;
 			while (*s && !is_seperator(*s, sep))
 				s++;
