@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 13:12:01 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:01:25 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ char	*handle_multiple_dollars(char	*token, int count, int i, t_data *data)
 	return (token);
 }
 
+
 char	*expand_token(char *token, t_data *data)
 {
 	char	*previous;
@@ -102,6 +103,18 @@ char	*expand_token(char *token, t_data *data)
 	return (token);
 }
 
+int	skip_here_doc_limiter(t_token **tokens, int current)
+{
+	while(current >= 0 && tokens[current]->part_of_previous)
+		current--;
+	if (current > 0)
+	{
+		if(tokens[current - 1]->type == HERE_DOC)
+			return (0);
+	}
+	return (1);
+}
+
 void	expanding(t_data *data)
 {
 	int	i;
@@ -111,7 +124,7 @@ void	expanding(t_data *data)
 	i = 0;
 	while (tokens[i])
 	{
-		if (tokens[i]->expandable)
+		if (tokens[i]->expandable && skip_here_doc_limiter(tokens, i))
 		{
 			if (tokens[i]->quoted != D_QUOTE)
 				tokens[i]->content = expand_token(tokens[i]->content, data);

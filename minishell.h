@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 13:25:02 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:11:30 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,22 @@ typedef	struct s_alloc
 	struct s_alloc	*next;
 }	t_alloc;
 
+typedef struct s_redir
+{
+	char	*name;
+	char	*here_doc_limiter;
+	int		type;
+	int		here_doc_expandable;
+	struct s_redirect *next;
+}	t_redir;
+
+
 typedef	struct s_command
 {
-	char *name;
 	char	**args;
-	
+	t_redir	*infiles;
+	t_redir *outfiles;
 }	t_command;
-
 
 typedef	struct s_data
 {
@@ -97,6 +106,7 @@ char	*expand_token(char *token, t_data *data);
 char	*create_spaces(int count, t_data *data);
 char	*join_tokens(char **strs, char *token, int j, t_data *data);
 char	*get_expanded_value(char *token, int i, int *j, t_data *data);
+int	skip_here_doc_limiter(t_token **tokens, int current);
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize);
 char	*ft_strchr(const char *s, int c);

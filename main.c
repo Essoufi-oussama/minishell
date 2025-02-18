@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 13:25:22 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:39:26 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **env)
 	while(1)
 	{
 		data->alloc = NULL;		
-		data->line = readline("-> minishell ");
+		data->line = readline("-> minihell ");
 		if (!data->line)
 		{
 			printf("exit\n");
@@ -51,12 +51,12 @@ int	main(int argc, char **argv, char **env)
 			tokenize(data);
 			check_tokens(data->tokens);
 			expanding(data);
-			for(int i = 0; data->tokens[i]; i++)
-			{
-				// if (tokens[i]->part_of_previous)
-				// 	printf("part of previous ");
-				printf("%s\n", data->tokens[i]->content);
-			}
+			// for(int i = 0; data->tokens[i]; i++)
+			// {
+			// 	if (data->tokens[i]->part_of_previous)
+			// 		printf("part of previous ");
+			// 	printf("%s\n", data->tokens[i]->content);
+			// }
 		}
 		ft_lstclear_garbage(&data->alloc);
 	}

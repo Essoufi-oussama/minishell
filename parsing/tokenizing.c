@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:33:05 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 12:55:48 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:33:56 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote, t_data *data)
 	}
 	else if (quote == NO_QUOTE)
 	{
-		if (*i > 0 && is_word_char(str[*i - 1]) && str[*i - 1] != ' ')
+		if (*i > 0 && is_word_char(str[*i - 1]))
 			token->part_of_previous = 1;
 	}
 
