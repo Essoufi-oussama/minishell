@@ -12,26 +12,21 @@
 
 #include "../minishell.h"
 
-t_token	*insert_token_arr_word(int *i, char *str, int quote, t_data *data)
+static void	set_previous_part(t_token *token, int *i, char *str, int quote)
 {
-	char	*new;
-	int		j;
-	t_token	*token;
+	token->part_of_previous = 0;
+	if ((quote == D_QUOTE || quote == S_QUOTE) && *i - 1 > 0
+		&& is_word_char(str[*i - 2]))
+		token->part_of_previous = 1;
+	else if (quote == NO_QUOTE && *i > 0 && is_word_char(str[*i - 1]))
+		token->part_of_previous = 1;
+}
+
+static int	get_word_length(char *str, int *i, int quote)
+{
+	int	j;
 
 	j = 0;
-	token = ft_malloc(sizeof(t_token), data);
-	token->part_of_previous = 0;
-	if (quote == D_QUOTE || quote == S_QUOTE)
-	{
-		if (*i - 1 > 0 && is_word_char(str[*i - 2]))
-			token->part_of_previous = 1;
-	}
-	else if (quote == NO_QUOTE)
-	{
-		if (*i > 0 && is_word_char(str[*i - 1]))
-			token->part_of_previous = 1;
-	}
-
 	if (quote == S_QUOTE)
 		while (str[*i + j] && str[*i + j] != '\'')
 			j++;
@@ -40,12 +35,22 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote, t_data *data)
 			j++;
 	else
 		j = count_no_quotes(str + *i);
+	return (j);
+}
+
+t_token	*insert_token_arr_word(int *i, char *str, int quote, t_data *data)
+{
+	char		*new;
+	int			j;
+	t_token		*token;
+
+	token = ft_malloc(sizeof(t_token), data);
+	set_previous_part(token, i, str, quote);
+	j = get_word_length(str, i, quote);
 	new = ft_malloc(sizeof(char) * (j + 1), data);
 	ft_strlcpy(new, str + *i, j + 1);
-	if ((quote == D_QUOTE || quote == NO_QUOTE) && ft_strchr(new, '$'))
-		token->expandable = 1;
-	else
-		token->expandable = 0;
+	token->expandable = ((quote == D_QUOTE || quote == NO_QUOTE)
+			&& ft_strchr(new, '$'));
 	token->content = new;
 	token->type = WORD;
 	token->quoted = quote;
