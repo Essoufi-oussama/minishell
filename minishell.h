@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 22:06:39 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:01:57 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_redir
 typedef	struct s_command
 {
 	char	**args;
+	int 	args_count;
 	t_redir	*infiles;
 	t_redir *outfiles;
 }	t_command;
@@ -74,6 +75,7 @@ typedef	struct s_data
 	char	**env;
 	int	exit_status;
 	t_command	**commands;
+	int		command_count;
 	t_token		**tokens;
 	t_alloc	*alloc;
 }	t_data;

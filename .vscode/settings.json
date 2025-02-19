@@ -1,9 +1,0 @@
-{
-	"files.associations": {
-		"push_swap.h": "c",
-		"stdio.h": "c",
-		"minishell.h": "c",
-		"chrono": "c",
-		"span": "c"
-	}
-}

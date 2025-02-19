@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 20:59:54 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 22:34:47 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:05:54 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ t_command	*build_command(t_data *data, t_token **tokens, int count)
 			i++;
 	}
 	command->args[j] = NULL;
+	command->args_count = j;
 	return (command);
 }
 
@@ -173,14 +174,13 @@ void	parse(t_data *data)
 {
 	int i;
 	int	j;
-	int count;
 	t_token	**tokens;
 
-	count = count_commands(data->tokens);
+	data->command_count = count_commands(data->tokens);
 	i = 0;
 	tokens = data->tokens;
-	data->commands = ft_malloc(sizeof(t_command *) * (count_commands(tokens) + 1), data);
-	while (i < count)
+	data->commands = ft_malloc(sizeof(t_command *) * (data->command_count + 1), data);
+	while (i < data->command_count)
 	{
 		j = 0;
 		while(tokens[j] && tokens[j]->type != PIPE)
@@ -192,10 +192,11 @@ void	parse(t_data *data)
 	}
 	data->commands[i] = NULL;
 	i = 0;
+	printf("we have %d commands\n", data->command_count);
 	while(data->commands[i])
 	{
 		j = -1;
-		printf("command n: %d\n", i);
+		printf(" command n: %d has %d args\n", i, data->commands[i]->args_count);
 		while(data->commands[i]->args[++j])
 			printf("arg number %d: %s \n", j, data->commands[i]->args[j]);
 		printf("     list of infiles: ");
@@ -207,7 +208,11 @@ void	parse(t_data *data)
 			while(current)
 			{
 				if (current->type == HERE_DOC)
-					printf("here_doc with limiter: ");					
+					printf("here_doc with limiter: ");
+				if(current->type == HERE_DOC && current->here_doc_expandable == 1)
+					printf(" exapnd ");
+				else if (current->type == HERE_DOC && current->here_doc_expandable == 0)
+					printf("dont expand ");					
 				printf("%s ", current->name);
 				current = current->next;
 			}

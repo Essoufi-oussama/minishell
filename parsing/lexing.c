@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:40:59 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 14:46:29 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/19 12:13:33 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	check_end_and_pipe(t_token **tokens)
 	}
 	if (is_operation(tokens[i - 1]->type))
 	{
-		printf("synatx error near unexpected token 'newline'\n");
+		printf("syntax error near unexpected token 'newline'\n");
 		return (1);
 	}
 	return (0);
