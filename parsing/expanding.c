@@ -6,11 +6,47 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 14:01:25 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:58:20 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	ft_isalnum(int c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || 
+		(c >= '0' && c <= '9'))
+		return (c);
+	return (0);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t i;
+
+	i = 0;
+	if (n == 0)
+		return (0);
+	while (i < n - 1 && s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+char	*ft_getenv(char *str, t_data *data)
+{
+	int	i;
+
+	if (data->env == NULL)
+		return (ft_strdup("", data));
+	i = 0;
+	while(data->env[i])
+	{
+		if (ft_strncmp(data->env[i], str, ft_strlen(str)) == 0)
+			return(ft_strdup(ft_strchr(data->env[i], '=') + 1, data));
+		i++;
+	}
+	return(ft_strdup("", data));
+}
 
 char	*get_expanded_value(char *token, int i, int *j, t_data *data)
 {
@@ -24,15 +60,13 @@ char	*get_expanded_value(char *token, int i, int *j, t_data *data)
 	}
 	while (token[i + *j] && (token[i + *j] != '$'))
 	{
-		if(token[i + *j] == '\'' || token[i + *j] == '\"')
+		if(!ft_isalnum(token[i + *j]))
 			break ;
 		(*j)++;
 	}
 	expanded = ft_malloc(sizeof(char) * (*j + 1), data);
 	ft_strlcpy(expanded, token + i, *j + 1);
-	if (!getenv(expanded))
-		return (ft_strdup("", data));
-	return (ft_strdup(getenv(expanded), data));
+	return (ft_getenv(expanded, data));
 }
 
 char	*build_exp_str(char *token, char *previous, int i, t_data *data)

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 20:59:54 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/19 13:05:54 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/20 20:06:01 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,11 @@ void	parse(t_data *data)
 		tokens = tokens + j;
 	}
 	data->commands[i] = NULL;
-	i = 0;
+}
+
+
+/*
+i = 0;
 	printf("we have %d commands\n", data->command_count);
 	while(data->commands[i])
 	{
@@ -233,4 +237,4 @@ void	parse(t_data *data)
 		
 		i++;
 	}
-}
+*/

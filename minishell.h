@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/19 13:01:57 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:57:39 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,13 @@ typedef	struct s_command
 	t_redir *outfiles;
 }	t_command;
 
+typedef	struct s_env
+{
+	char	*name;
+	struct s_env *next;
+}	t_env;
+
+
 typedef	struct s_data
 {
 	char	*line;
@@ -81,8 +88,8 @@ typedef	struct s_data
 }	t_data;
 
 int		count_tokens(char *str);
-int		lexing(t_token **tokens);
-int		check_quotes(char *str);
+int		lexing(t_token **tokens, t_data *data);
+int		check_quotes(char *str, t_data *data);
 int		is_operation(int i);
 int		check_special_char(t_token **tokens);
 int		is_word_char(char c);
@@ -90,8 +97,8 @@ int		is_special(char c);
 int		to_handle(char c);
 int		handle_quotes(char *str, int *i, char quote_char);
 int		count_no_quotes(char *str);
-int		check_consecutive_expressions(t_token **tokens);
-int		check_end_and_pipe(t_token **tokens);
+int		check_consecutive_expressions(t_token **tokens, t_data *data);
+int		check_end_and_pipe(t_token **tokens, t_data *data);
 
 void	tokenize(t_data *data);
 void	loop_token_arr(char *str, t_token **token_arr, t_data *data);
@@ -107,7 +114,8 @@ char	*expand_token(char *token, t_data *data);
 char	*create_spaces(int count, t_data *data);
 char	*join_tokens(char **strs, char *token, int j, t_data *data);
 char	*get_expanded_value(char *token, int i, int *j, t_data *data);
-int	skip_here_doc_limiter(t_token **tokens, int current);
+int		skip_here_doc_limiter(t_token **tokens, int current);
+char	*ft_getenv(char *str, t_data *data);
 
 void	parse(t_data *data);
 int	count_commands(t_token **tokens);
