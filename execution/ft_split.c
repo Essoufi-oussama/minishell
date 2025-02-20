@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_bonus.c                                   :+:      :+:    :+:   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/09 16:16:39 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/02 21:03:17 by oessoufi         ###   ########.fr       */
+/*   Created: 2025/02/10 11:15:01 by tbenzaid          #+#    #+#             */
+/*   Updated: 2025/02/10 11:24:24 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "pipex.h"
 
 static size_t	word_count(char const *s, char sep)
 {
