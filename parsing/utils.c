@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:28:07 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 13:23:50 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/23 19:57:25 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,28 @@ char	*ft_strjoin(char const *s1, char const *s2, t_data *data)
 		str[i++] = s2[j++];
 	str[i] = '\0';
 	return (str);
+}
+
+char *ft_strtrim(char const *s1, t_data *data)
+{
+    size_t start;
+    size_t end;
+    char *str;
+
+    if (!s1)
+        return (NULL);
+    start = 0;
+    end = ft_strlen(s1);
+    if (end == 0)
+        return (ft_strdup("", data));
+    end--;
+    while (s1[start] && s1[start] == ' ')
+        start++;
+    while (end > start && s1[end] == ' ')
+        end--;
+    str = ft_malloc(end - start + 2, data);
+    if (!str)
+        return (NULL);
+    ft_strlcpy(str, &s1[start], end - start + 2);
+    return (str);
 }

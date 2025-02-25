@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:16:39 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 13:25:56 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:50:40 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	is_seperator(char c, char sep)
 	return (0);
 }
 
-static size_t	word_count(char const *s, char sep)
+size_t	word_count(char const *s, char sep)
 {
 	size_t	i;
 	size_t	wc;

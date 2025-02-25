@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 20:59:54 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/20 20:06:01 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:11:58 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,85 @@ int	args_count(t_token **tokens, int tokens_count)
 		}
 		else
 		{
-			count++;
+			if (tokens[i]->split_later == 1)
+				count += word_count(tokens[i]->content, ' ');
+			else
+				count++;
 			i++;
 			while (i < tokens_count && tokens[i]->part_of_previous)
+			{
+				if (tokens[i]->split_later == 1)
+					count += word_count(tokens[i]->content, ' ');
 				i++;
+			}
 		}
 	}
 	return (count);
+}
+
+int here_doc(t_redir *infile, t_data *data)
+{
+    int fd[2];
+    char *line;
+	char	*tmp;
+	char *limiter = infile->name;
+    if(pipe(fd) == -1)
+    {
+        perror("pipe");
+        return (-1);
+    }
+    while(1)
+    {
+        line = readline("> ");
+        if(line == NULL || ft_strcmp(line, limiter) == 0)
+        {
+            free(line);
+            break;
+        }
+		tmp = line;
+        if (infile->here_doc_expandable)
+            line = handle_quoted_token(line, data);
+        if(write(fd[1], line, ft_strlen(line)) == -1 || write(fd[1], "\n", 1) == -1)
+        {
+            perror("write");
+            free(line);
+            close(fd[0]);
+            close(fd[1]);
+            return (-1);
+        }
+        free(tmp);
+    }
+    
+    close(fd[1]);
+    return (fd[0]);
+}
+
+t_redir	*insert_in_heredoc(t_token **tokens, int *i, t_data *data)
+{
+	t_redir *infile;
+
+	infile = ft_malloc(sizeof(t_redir), data);
+	infile->type = tokens[*i]->type;
+	(*i)++;
+	infile->name = get_full_name_in(tokens, infile, i, data);
+	infile->here_doc_fd = here_doc(infile, data);
+	infile->next = NULL;
+	return(infile);
+}
+
+void	split_this_sh(char *str, char **command, int *j, t_data *data)
+{
+	char	**split_str;
+	int		i;
+
+	i = 0;
+	split_str = ft_split(str, ' ', data);
+	while(split_str[i])
+	{
+		command[*j] = split_str[i];
+		i++;
+		(*j)++;
+	}
 }
 
 t_command	*build_command(t_data *data, t_token **tokens, int count)
@@ -156,12 +228,19 @@ t_command	*build_command(t_data *data, t_token **tokens, int count)
 	command->args = ft_malloc(sizeof(char *) * (args_count(tokens, count) + 1), data);
 	while(i < count)
 	{
-		if (tokens[i]->type == INPUT_DIRECTION || tokens[i]->type == HERE_DOC)
+		if (tokens[i]->type == INPUT_DIRECTION )
 			ft_lstadd_back(&command->infiles , insert_in(tokens, &i, data));
+		else if (tokens[i]->type == HERE_DOC)
+			ft_lstadd_back(&command->infiles , insert_in_heredoc(tokens, &i, data));
 		else if (tokens[i]->type == OUT_APPEND || tokens[i]->type == OUTPUT_DIRECTION)
 			ft_lstadd_back(&command->outfiles , insert_out(tokens, &i, data));
 		else if (tokens[i]->type == WORD)
-			command->args[j++] = get_full_name(tokens, &i, data);
+		{
+			if (tokens[i]->split_later == 1)
+				split_this_sh(get_full_name(tokens, &i, data), command->args, &j, data);
+			else
+				command->args[j++] = get_full_name(tokens, &i, data);
+		}
 		else
 			i++;
 	}
@@ -193,48 +272,49 @@ void	parse(t_data *data)
 	data->commands[i] = NULL;
 }
 
-
-/*
-i = 0;
-	printf("we have %d commands\n", data->command_count);
+void	join_both_arrays(t_data *data)
+{
+	t_command **command;
+	int	i ;
+	int	j ;
+	
+	i =0;
+	command = ft_malloc(sizeof(t_command *) * (data->command_count + data->readline_command_count), data);
 	while(data->commands[i])
 	{
-		j = -1;
-		printf(" command n: %d has %d args\n", i, data->commands[i]->args_count);
-		while(data->commands[i]->args[++j])
-			printf("arg number %d: %s \n", j, data->commands[i]->args[j]);
-		printf("     list of infiles: ");
-		if (data->commands[i]->infiles == NULL)
-			printf("No infiles!");
-		else 
-		{
-			t_redir *current = data->commands[i]->infiles;
-			while(current)
-			{
-				if (current->type == HERE_DOC)
-					printf("here_doc with limiter: ");
-				if(current->type == HERE_DOC && current->here_doc_expandable == 1)
-					printf(" exapnd ");
-				else if (current->type == HERE_DOC && current->here_doc_expandable == 0)
-					printf("dont expand ");					
-				printf("%s ", current->name);
-				current = current->next;
-			}
-		}
-		printf("        list of outfiles: ");
-		if (data->commands[i]->outfiles == NULL)
-			printf("No outfiles!");
-		else 
-		{
-			t_redir *current = data->commands[i]->outfiles;
-			while(current)
-			{
-				printf("%s ", current->name);
-				current = current->next;
-			}
-		}
-		printf("\n");
-		
+		command[i] = data->commands[i];
 		i++;
 	}
-*/
+	i--;
+	j = 0;
+	while(data->readline_commands[j])
+		command[i++] = data->readline_commands[j++];
+	command[i] = NULL;
+	data->command_count = i;
+	data->commands = command;
+}
+
+void	parsing_new_stuff(t_data *data)
+{
+	int i;
+	int	j;
+	t_token	**tokens;
+
+	data->readline_command_count = count_commands(data->readline_tokens);
+	i = 0;
+	tokens = data->readline_tokens;
+	data->readline_commands = ft_malloc(sizeof(t_command *) * (data->readline_command_count + 1), data);
+	while (i < data->readline_command_count)
+	{
+		j = 0;
+		while(tokens[j] && tokens[j]->type != PIPE)
+			j++;
+		data->readline_commands[i++] = build_command(data, tokens, j);
+		if (tokens[j] && tokens[j]->type == PIPE)
+			j++;
+		tokens = tokens + j;
+	}
+	data->readline_commands[i] = NULL;
+	join_both_arrays(data);
+}
+

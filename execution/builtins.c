@@ -3,123 +3,96 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/18 19:49:21 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/02/20 15:34:40 by tbenzaid         ###   ########.fr       */
+/*   Created: 2025/02/20 20:13:56 by tbenzaid          #+#    #+#             */
+/*   Updated: 2025/02/25 14:01:14 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../minishell.h"
 
-#include <string.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-// -nnnnn
 void echo(char **str)
-
 {
     int i = 1;
     int option_flag = 0;
-    if(str[1] == NULL)
+    if (str[1] == NULL)
     {
         printf("\n");
         return;
     }
-    if(strcmp(str[1],"-n") == 0)
+    if (strcmp(str[1], "-n") == 0)
     {
         option_flag = 1;
         i = 2;
     }
-    while(str[i] && str[i] == "-n")
+    while (str[i] && strcmp(str[i], "-n") == 0)
         i++;
-    while(str[i])
+    while (str[i])
     {
-        printf("%s",str[i]);
-        if(str[i + 1])
-           printf(" ");
+        printf("%s", str[i]);
+        if (str[i + 1])
+            printf(" ");
         i++;
     }
-    if(option_flag == 0)
+    if (option_flag == 0)
         printf("\n");
 }
+
 void cd(char **str)
 {
-    if(str[1] == NULL)
+    if(str[1] != NULL && str[2] != NULL)
+    {
+        printf("cd: too many arguments\n");
+        return;
+    }
+    if (str[1] == NULL)
     {
         str[1] = getenv("HOME");
-        if(str[1] == NULL)
+        if (str[1] == NULL)
+        {
             printf("cd: No home directory found\n");
+            return;
+        }
     }
-    if(chdir(str[1]) != 0)
+    if (chdir(str[1]))
+    {
         perror("cd");
-   
+        return;
+    }
 }
-void pwd(char **str)
+
+void pwd()
 {
-    char *path;
     char s[100];
-    path = getcwd(s,100);
-    if(!path)
-        printf("ereur");
+    char *path = getcwd(s, 100);
+    if (!path)
+        printf("error\n");
     else
-        printf("%s\n",getcwd(s,100));
-} 
-void env(char **str , s_env *head)
+        printf("%s\n", path);
+}
+
+
+void env(char **str, t_data *data)
 {
-    if(str[1] != NULL)
+	t_env *head;
+
+	head = data->env;
+    if (str[1] != NULL)
     {
         printf("No such file or directory\n");
         return;
     }
-    while(head)
+    while (head)
     {
-        printf("%s/n",head->next)
+        if(ft_strchr(head->env_var,'='))
+            printf("%s\n", head->env_var);
         head = head->next;
     }
-    
 }
 
-
-void execution_cas(char **args)
+void exit_program(int status)
 {
-    if(strcmp(args[0] == "echo"))
-        echo();
-    if(strcmp(args[0] == "cd"))
-        cd();
-    if(strcmp(args[0] == "pwd"))
-        pwd();
-}
-
-struct s_env
-{
-    char *env_var;
-    struct s_env *next;
-} t_env;
-
-void addenv(char **env)
-{
-    if(!env || *! env)
-        return(NULL);
-    int i = 0;
-    t_env *head = NULL;
-    node  = malloc(sizeof(t_env));
-    if(!node)
-        return;
-    while(env[i])
-    {
-        node -> env_var = env[i];
-        node -> next = NULL;
-        if(!head)
-            head = node;
-        else
-        {
-            t_env *tmp = head
-            while(temp->next)
-                temp = temp -> next;
-            temp -> next = node
-        }
-        i++;
-    }
+    printf("exit\n");
+    exit(status);
 }

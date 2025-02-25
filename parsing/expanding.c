@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/20 14:58:20 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:04:32 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,30 +20,18 @@ int	ft_isalnum(int c)
 	return (0);
 }
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t i;
-
-	i = 0;
-	if (n == 0)
-		return (0);
-	while (i < n - 1 && s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-}
-
 char	*ft_getenv(char *str, t_data *data)
 {
-	int	i;
+	t_env *current;
 
 	if (data->env == NULL)
 		return (ft_strdup("", data));
-	i = 0;
-	while(data->env[i])
+	current = data->env;
+	while(current)
 	{
-		if (ft_strncmp(data->env[i], str, ft_strlen(str)) == 0)
-			return(ft_strdup(ft_strchr(data->env[i], '=') + 1, data));
-		i++;
+		if (ft_strncmp(current->env_var, str, ft_strlen(str)) == 0)
+			return(ft_strdup(ft_strchr(current->env_var, '=') + 1, data));
+		current = current->next;
 	}
 	return(ft_strdup("", data));
 }
@@ -58,11 +46,19 @@ char	*get_expanded_value(char *token, int i, int *j, t_data *data)
 		(*j)++;
 		return (ft_itoa(data->exit_status, data));
 	}
-	while (token[i + *j] && (token[i + *j] != '$'))
+	if(!ft_isalnum(token[i]) && token[i] && token[i + *j] != '_')
 	{
-		if(!ft_isalnum(token[i + *j]))
-			break ;
-		(*j)++;
+		while (token[i + *j] && (token[i + *j] != '$'))
+			(*j)++;
+	}
+	else
+	{
+		while (token[i + *j] && (token[i + *j] != '$'))
+		{
+			if(!ft_isalnum(token[i + *j]) && token[i + *j] != '_')
+				break ;
+			(*j)++;
+		}
 	}
 	expanded = ft_malloc(sizeof(char) * (*j + 1), data);
 	ft_strlcpy(expanded, token + i, *j + 1);
@@ -111,7 +107,6 @@ char	*handle_multiple_dollars(char	*token, int count, int i, t_data *data)
 	return (token);
 }
 
-
 char	*expand_token(char *token, t_data *data)
 {
 	char	*previous;
@@ -137,16 +132,28 @@ char	*expand_token(char *token, t_data *data)
 	return (token);
 }
 
-int	skip_here_doc_limiter(t_token **tokens, int current)
+int	skip_ops_except_pipe(t_token **tokens, int current)
 {
 	while(current >= 0 && tokens[current]->part_of_previous)
 		current--;
 	if (current > 0)
 	{
-		if(tokens[current - 1]->type == HERE_DOC)
+		if(is_operation(tokens[current - 1]->type) && tokens[current - 1]->type != PIPE)
 			return (0);
 	}
 	return (1);
+}
+
+void	remove_token(t_token **tokens, int index)
+{
+	int	i;
+
+	i = index;
+	while (tokens[i])
+	{
+		tokens[i] = tokens[i + 1];
+		i++;
+	}
 }
 
 void	expanding(t_data *data)
@@ -158,10 +165,82 @@ void	expanding(t_data *data)
 	i = 0;
 	while (tokens[i])
 	{
-		if (tokens[i]->expandable && skip_here_doc_limiter(tokens, i))
+		if (tokens[i]->expandable && skip_ops_except_pipe(tokens, i))
 		{
-			if (tokens[i]->quoted != D_QUOTE)
+			if (tokens[i]->quoted == D_QUOTE)
+			{
+				tokens[i]->split_later = 0;
 				tokens[i]->content = expand_token(tokens[i]->content, data);
+			}
+			else if (tokens[i]->quoted == NO_QUOTE)
+			{
+				tokens[i]->split_later = 1;
+				if (ft_strlen(tokens[i]->content) == 1 && tokens[i + 1] && tokens[i + 1]->part_of_previous)
+				{
+					tokens[i + 1]->part_of_previous = 0;
+					remove_token(tokens, i);
+					if (i > 0)
+						i--;
+					continue;
+				}
+				else
+				{
+					tokens[i]->content = expand_token(tokens[i]->content, data);
+					if (ft_strlen(tokens[i]->content) == 0)
+					{
+						remove_token(tokens, i);
+						if (i > 0)
+							i--;
+						continue;
+					}
+				}
+			}
+			else
+				tokens[i]->content = handle_quoted_token(tokens[i]->content, data);
+		}
+		i++;
+	}
+}
+
+void	expanding_new_stuff(t_data *data)
+{
+	int	i;
+	t_token **tokens;
+
+	tokens = data->readline_tokens;
+	i = 0;
+	while (tokens[i])
+	{
+		if (tokens[i]->expandable && skip_ops_except_pipe(tokens, i))
+		{
+			if (tokens[i]->quoted == D_QUOTE)
+			{
+				tokens[i]->split_later = 0;
+				tokens[i]->content = expand_token(tokens[i]->content, data);
+			}
+			else if (tokens[i]->quoted == NO_QUOTE)
+			{
+				tokens[i]->split_later = 1;
+				if (ft_strlen(tokens[i]->content) == 1 && tokens[i + 1] && tokens[i + 1]->part_of_previous)
+				{
+					tokens[i + 1]->part_of_previous = 0;
+					remove_token(tokens, i);
+					if (i > 0)
+						i--;
+					continue;
+				}
+				else
+				{
+					tokens[i]->content = expand_token(tokens[i]->content, data);
+					if (ft_strlen(tokens[i]->content) == 0)
+					{
+						remove_token(tokens, i);
+						if (i > 0)
+							i--;
+						continue;
+					}
+				}
+			}
 			else
 				tokens[i]->content = handle_quoted_token(tokens[i]->content, data);
 		}

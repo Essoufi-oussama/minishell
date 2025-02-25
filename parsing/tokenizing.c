@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:33:05 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/18 14:33:56 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/02/25 10:16:24 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote, t_data *data)
 	token->content = new;
 	token->type = WORD;
 	token->quoted = quote;
+	token->split_later = 0;
 	*i += j;
 	return (token);
 }
@@ -133,6 +134,16 @@ void	tokenize(t_data *data)
 	int		tokens_count;
 
 	tokens_count = count_tokens(data->line);
+	data->token_size = tokens_count;
 	data->tokens = ft_malloc(sizeof(t_token *) * (tokens_count + 1), data);
 	loop_token_arr(data->line, data->tokens, data);
+}
+
+void	tokenize_pipe(t_data *data)
+{
+	int		tokens_count;
+
+	tokens_count = count_tokens(data->pipe_line);
+	data->readline_tokens = ft_malloc(sizeof(t_token *) * (tokens_count + 1), data);
+	loop_token_arr(data->pipe_line, data->readline_tokens, data);
 }
