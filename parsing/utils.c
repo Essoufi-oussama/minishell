@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:28:07 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/07 23:19:29 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:37:10 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,4 @@ char	*ft_strtrim_tab(char const *s1, t_data *data)
 		return (NULL);
 	ft_strlcpy(str, &s1[start], end - start + 2);
 	return (str);
-}
-
-int	w_ch(char c)
-{
-	return (!to_handle(c) && ft_isprint(c));
 }

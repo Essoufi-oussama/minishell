@@ -6,17 +6,11 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/07 17:52:55 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:57:13 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	is_redir(int i)
-{
-	return (i == INPUT_DIRECTION || i == OUTPUT_DIRECTION
-		|| i == OUT_APPEND);
-}
 
 int	skip_ops_except_pipe(t_token **tokens, int *current, t_data *data)
 {

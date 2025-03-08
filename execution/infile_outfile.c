@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 22:40:12 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/07 23:53:47 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 21:04:37 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,10 @@ void	outfile_cas(t_redir *outfiles, t_data *data, t_alloc **head)
 {
 	int	output;
 
-	if (outfiles->quote != S_QUOTE)
+	if (outfiles->ambigious)
 	{
-		if (outfiles->name[0] == '$' && ft_strlen(outfiles->name) > 1)
-		{
-			print_error_status(outfiles->name, "ambiguous redirect");
-			free_exit_child(data, head, 1);
-		}
+		print_error_status(outfiles->name, "ambiguous redirect");
+		free_exit_child(data, head, 1);
 	}
 	check_dir(outfiles->name, data, head);
 	if (outfiles->type == OUTPUT_DIRECTION)
@@ -68,10 +65,10 @@ void	infile_cas(t_redir *infiles, t_data *data, t_alloc **head)
 {
 	int	input;
 
-	if (infiles->quote != S_QUOTE && infiles->type == INPUT_DIRECTION)
+	if (infiles->ambigious && infiles->type == INPUT_DIRECTION)
 	{
-		if (infiles->name[0] == '$' && ft_strlen(infiles->name) > 1)
-			print_error_status(infiles->name, "ambiguous redirect");
+		print_error_status(infiles->name, "ambiguous redirect");
+		free_exit_child(data, head, 1);
 	}
 	if (infiles->type == INPUT_DIRECTION)
 		input = open(infiles->name, O_RDONLY, 0644);
@@ -79,13 +76,14 @@ void	infile_cas(t_redir *infiles, t_data *data, t_alloc **head)
 		input = open(infiles->here_doc_filename, O_RDWR, 0644);
 	if (input == -1)
 	{
+		write(2, "minihell: ", 11);
 		perror(infiles->name);
 		free_exit_child(data, head, 1);
 	}
 	close(0);
 	if (dup(input) == -1)
 	{
-		perror("minihell");
+		perror("minihell: ");
 		close(input);
 		free_exit_child(data, head, 1);
 	}

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 19:37:25 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/07 23:14:32 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:39:33 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,13 @@ char	*get_full_name_in(t_token **tok, t_redir *inf, int *i, t_data *data)
 	inf->here_doc_trim = tok[*i - 1]->here_doc_trim;
 	if (tok[*i]->quoted)
 		inf->here_doc_expandable = 0;
+	if (tok[*i]->ambigious)
+		inf->ambigious = tok[*i]->ambigious;
 	(*i)++;
 	while (tok[*i] && tok[*i]->part_of_previous)
 	{
+		if (tok[*i]->ambigious)
+			inf->ambigious = tok[*i]->ambigious;
 		name = ft_strjoin(name, tok[*i]->content, data);
 		if (tok[*i]->quoted)
 			inf->here_doc_expandable = 0;
@@ -78,6 +82,7 @@ t_redir	*insert_file(t_token **tokens, int *i, t_data *data)
 
 	infile = ft_malloc(sizeof(t_redir), data);
 	infile->here_doc_expandable = 0;
+	infile->ambigious = 0;
 	infile->type = tokens[*i]->type;
 	(*i)++;
 	infile->quote = tokens[*i]->quoted;

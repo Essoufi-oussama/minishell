@@ -6,37 +6,41 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 00:09:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/06 11:35:19 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:57:23 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*expand_token(char *token, t_data *data)
+int	ft_isalnum(int c)
 {
-	char	*previous;
-	int		i;
-	int		count;
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+		|| (c >= '0' && c <= '9'))
+		return (c);
+	return (0);
+}
 
-	previous = NULL;
-	i = 0;
-	while (token[i])
+char	*ft_getenv(char *str, t_data *data)
+{
+	t_env	*current;
+	char	*value;
+
+	if (data->env == NULL && ft_strcmp(str, "PATH") == 0)
+		return (ft_strdup(data->default_path, data));
+	current = data->env;
+	while (current)
 	{
-		if (token[i] == '$')
+		if (ft_strncmp(current->env_var, str, ft_strlen(str)) == 0)
 		{
-			count = 0;
-			while (token[i + count] && token[i + count] == '$')
-				count++;
-			if (count == 1 && token[i] && !token[i + count])
-				break ;
-			if (count > 1)
-				token = handle_multiple_dollars(token, count, i, data);
+			value = ft_strchr(current->env_var, '=');
+			if (value == NULL)
+				return (ft_strdup("", data));
 			else
-				token = build_exp_str(token, previous, i + count, data);
+				return (ft_strdup(value + 1, data));
 		}
-		i++;
+		current = current->next;
 	}
-	return (token);
+	return (ft_strdup("", data));
 }
 
 static void	handle_single_char_token(t_token **tokens, int *i)
@@ -62,7 +66,10 @@ static void	handle_empty_token(t_token **tokens, int *i, char *original)
 			(*i)--;
 	}
 	else
+	{
+		tokens[*i]->ambigious = 1;
 		tokens[(*i)++]->content = original;
+	}
 }
 
 void	handle_redirect(t_token **tokens, int *i, t_data *data)
@@ -82,5 +89,12 @@ void	handle_redirect(t_token **tokens, int *i, t_data *data)
 	if (ft_strlen(tokens[*i]->content) == 0)
 		handle_empty_token(tokens, i, original);
 	else
+	{
+		if (ft_strchr(tokens[*i]->content, ' '))
+		{
+			tokens[*i]->content = original;
+			tokens[*i]->ambigious = 1;
+		}
 		(*i)++;
+	}
 }

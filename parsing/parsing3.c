@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 19:38:33 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/07 23:19:43 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 22:38:31 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static char	*get_heredoc_name(t_data *data)
 	name = ft_strjoin("/tmp/.here_doc_limit", number, data);
 	if (access(name, F_OK | X_OK) != -1)
 	{
-		while(access(name, F_OK | X_OK) != -1)
+		while (access(name, F_OK | X_OK) != -1)
 			name = ft_strjoin(name, "t", data);
 	}
 	i++;
@@ -96,7 +96,7 @@ void	here_doc(t_redir *infile, t_data *data)
 	{
 		line = readline("> ");
 		add_data_line(line, data);
-		if(infile->here_doc_trim)
+		if (infile->here_doc_trim)
 			line = ft_strtrim_tab(line, data);
 		if (line == NULL || ft_strcmp(line, limiter) == 0)
 			break ;

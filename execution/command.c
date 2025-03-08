@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:12:09 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/07 23:50:35 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 21:03:43 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	execute_child_process(char **str, char **env_list,
 	path = get_path(env_list, str[0], data, head);
 	if (!path)
 	{
+		write(2, "minihell: ", 11);
 		if (access(str[0], F_OK) == -1)
 		{
 			ft_putstr_fd(str[0], 2);

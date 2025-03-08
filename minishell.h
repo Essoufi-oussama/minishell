@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 00:27:52 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 23:02:30 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_token
 	char	*content;
 	int		split_later;
 	int		here_doc_trim;
+	int		ambigious;
 }	t_token;
 
 typedef enum e_quote
@@ -74,6 +75,7 @@ typedef struct s_redir
 	char			*here_doc_filename;
 	int				here_doc_trim;
 	int				quote;
+	int				ambigious;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -121,7 +123,7 @@ t_token	*insert_token_arr_op(int *i, char *str, t_data *data);
 
 void	expanding(t_data *data);
 char	*handle_multiple_dollars(char *token, int count, int i, t_data *data);
-char	*build_exp_str(char *token, char *previous, int i, t_data *data);
+char	*build_exp_str(char *token, char *previous, int *i, t_data *data);
 char	*expand_token(char *token, t_data *data);
 char	*get_expanded_value(char *token, int i, int *j, t_data *data);
 
@@ -203,6 +205,9 @@ char	*ft_strncpy(char *dest, char *src, int n);
 size_t	word_count(char const *s, char sep);
 int		is_valid(const char *str);
 char	*ft_strtrim_tab(char const *s1, t_data *data);
+int		ft_isdigit(int c);
+int		is_redir(int i);
+char	*ft_getenv(char *str, t_data *data);
 
 void	lstadd(t_redir **lst, t_redir *new);
 t_env	*ft_lstlast2(t_env *lst);
