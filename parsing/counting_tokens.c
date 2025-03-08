@@ -6,16 +6,11 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 16:23:14 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/16 19:34:08 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/07 22:42:08 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	is_word_char(char c)
-{
-	return (!to_handle(c) && ft_isprint(c));
-}
 
 int	is_quote(char c)
 {
@@ -45,7 +40,7 @@ int	handle_quotes(char *str, int *i, char quote_char)
 			(*i)++;
 	}
 	if (str[*i] == quote_char)
-			(*i)++;
+		(*i)++;
 	return (count);
 }
 
@@ -60,16 +55,20 @@ int	count_tokens(char *str)
 	{
 		if (str[i] == '\'' || str[i] == '\"')
 			count += handle_quotes(str, &i, str[i]);
-		else if ((is_word_char(str[i]) || to_handle(str[i])) && !is_quote(str[i]))
+		else if ((w_ch(str[i]) || to_handle(str[i])) && !is_quote(str[i]))
 		{
 			count++;
-			if (is_word_char(str[i]) && !is_quote(str[i]))
-				while (str[i] && is_word_char(str[i + 1]) && !is_quote(str[i + 1]))
+			if (w_ch(str[i]) && !is_quote(str[i]))
+				while (str[i] && w_ch(str[i + 1]) && !is_quote(str[i + 1]))
 					i++;
 			if (str[i] == '>' && str[i + 1] == '>')
 				i++;
 			else if (str[i] == '<' && str[i + 1] == '<')
+			{
+				if (str[i + 2] == '-')
+					i++;
 				i++;
+			}
 			i++;
 		}
 		else
@@ -83,7 +82,7 @@ int	count_no_quotes(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] && str[i] != ' ' && is_word_char(str[i]) && !is_quote(str[i]))
+	while (str[i] && str[i] != ' ' && w_ch(str[i]) && !is_quote(str[i]))
 		i++ ;
 	return (i);
 }

@@ -6,174 +6,110 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/25 14:06:19 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/06 11:43:18 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lstclear_env(t_env **lst)
-{
-	t_env	*tmp;
+int	g_in_readline = 0;
 
-	if (lst == NULL)
-		return ;
-	while (*lst)
-	{
-		tmp = (*lst)->next;
-		free((*lst)->env_var);
-		free(*lst);
-		*lst = tmp;
-	}
-	*lst = NULL;
-}
-
-void	free_exit(t_data *data)
-{
-	ft_lstclear_garbage(&data->alloc);
-	ft_lstclear_env(&data->env);
-	free(data);
-}
-
-t_data	*env_init(char **env, int argc, char **argv)
+t_data	*env_init(char **env)
 {
 	t_data	*data;
-	t_env *env_list;
+	t_env	*env_list;
 
-	(void)argc;
-	(void)argv;
 	data = malloc(sizeof(t_data));
-	if(!data)
-		exit(1) ;
+	if (!data)
+		exit(1);
 	env_list = NULL;
-    addenv(env, &env_list);
+	addenv(env, &env_list);
 	data->exit_status = 0;
 	data->commands = NULL;
 	data->line = NULL;
 	data->tokens = NULL;
-	data->env = env_list;
+	data->alloc = NULL;
+	if (*env == NULL)
+	{
+		data->env = NULL;
+		data->default_path = ftt_strdup(PATH);
+		if (data->default_path == NULL)
+			free_exit(data);
+	}
+	else
+		data->env = env_list;
 	return (data);
 }
-
-void	tokenize_new_stuff(char *cmd, t_data *data)
-{
-	data->pipe_line = cmd;
-	tokenize_pipe(data);
-}
-
-static void handle_pipe_at_end(t_data *data, char **cmd)
-{
-    char *line;
-    char *tmp_cmd;
-    char *space_joined;
-    char *final_joined;
-
-    if (check_quotes(*cmd, data) != 1)
-    {
-        tokenize(data);
-        expanding(data);
-        parse(data);
-    }
-    else
-        return;
-    while (*cmd && (*cmd)[ft_strlen(*cmd) - 1] == '|')
-    {
-        line = readline("> ");
-        if (!line)
-        {
-            printf("exit\n");
-            exit(1);
-        }
-        char *trimmed_line = ft_strtrim(line, data);
-		tmp_cmd = ft_strdup(*cmd, data);
-		space_joined = ft_strjoin(tmp_cmd, " ", data);
-		final_joined = ft_strjoin(space_joined, trimmed_line, data);
-		*cmd = ft_strtrim(final_joined, data);
-        if (ft_strlen(trimmed_line) == 0)
-            continue;
-        if (ft_strlen(trimmed_line) != 1 && trimmed_line[0] != '|' && trimmed_line[ft_strlen(trimmed_line) - 1] == '|')
-        {
-            tokenize_new_stuff(trimmed_line, data);
-			if (lexing_new_stuff(data->readline_tokens, data) != 1)
-				break;
-            expanding_new_stuff(data);
-            parsing_new_stuff(data);
-        }
-        else
-        {
-            if (check_quotes(trimmed_line, data) != 1)
-            {
-                tokenize_new_stuff(trimmed_line, data);
-                if (lexing_new_stuff(data->readline_tokens, data) == 1)
-                {
-                    expanding_new_stuff(data);
-                    parsing_new_stuff(data);
-                    execute(data);
-                }
-            }
-            break;
-        }
-		free(line);
-    }
-	if (ft_strlen(*cmd) != 0)
-		add_history(*cmd);
-}
-
 
 static void	process_command(t_data *data, char *cmd)
 {
 	if (check_quotes(cmd, data) != 1)
 	{
-		data->line = cmd;
-		tokenize(data);
+		tokenize(data, cmd);
 		if (lexing(data->tokens, data) == 1)
 		{
-			
 			expanding(data);
 			parse(data);
-			execute(data);
+			if (g_in_readline != 4)
+				execute(data);
+			destroy_heredocs(data);
 		}
 	}
 	if (ft_strlen(cmd) != 0)
 		add_history(cmd);
 }
 
-static void	handle_command(t_data *data, char *cmd)
+static void	process_line(t_data *data, char **lines)
 {
-	if (cmd && ft_strlen(cmd) > 1 && cmd[ft_strlen(cmd) - 1] == '|')
-		handle_pipe_at_end(data, &cmd);
-	else
-		process_command(data, cmd);
-	
+	char	*cmd;
+	int		i;
+
+	i = 0;
+	while (lines[i])
+	{
+		cmd = ft_strtrim(lines[i], data);
+		if (ft_strlen(cmd) == 0 && ft_strlen(lines[i]) > 0)
+			add_history(lines[i]);
+		if (cmd && ft_strlen(cmd) > 0)
+			process_command(data, cmd);
+		if (g_in_readline == 4)
+			break ;
+		i++;
+	}
 }
 
 static void	read_command(t_data *data)
 {
-	char	*cmd;
-	char	*tmp;
+	char	**lines;
 
 	data->alloc = NULL;
+	if (g_in_readline == 4)
+	{
+		dup2(2, 0);
+		data->exit_status = 130;
+	}
+	g_in_readline = 1;
 	data->line = readline("-> minihell ");
 	if (!data->line)
-	{
-		printf("exit\n");
-		exit(1);
-	}
-	tmp = data->line;
-	cmd = ft_strtrim(data->line, data);
-	if (ft_strlen(cmd) == 0 && ft_strlen(data->line) > 0)
-		add_history(data->line);
-	handle_command(data, cmd);
-	free(tmp);
+		free_exit(data);
+	g_in_readline = 0;
+	add_data_line(data->line, data);
+	lines = ft_split(data->line, '\n', data);
+	process_line(data, lines);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_data	*data;
 
-	data = env_init(env, argc, argv);
+	(void)argc;
+	(void)argv;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, noting);
+	data = env_init(env);
 	while (1)
 	{
+		rl_catch_signals = 0;
 		read_command(data);
 		ft_lstclear_garbage(&data->alloc);
 	}

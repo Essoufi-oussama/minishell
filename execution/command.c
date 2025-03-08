@@ -6,106 +6,106 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:12:09 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/02/25 15:32:36 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/07 23:50:35 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int execu_cmd(char **str, char **env_list, t_data *data)
+void	exit_status(int status, t_data *data)
 {
-    int pid;
-    char *path;
-    pid = fork();
-    if(pid < 0)
-        return(1);
-    if(pid == 0)
-    {   
-        infile_cas(data->commands[0]);
-        outfile_cas(data->commands[0]);
-        check_if_building(str,data->env,data);
-        path = get_path(env_list,str[0], data);
-        if(!path)
-        {
-            perror(str[0]);
-            exit (0);
-        }
-        if (execve(path, str, env_list) == -1)
-        {
-            perror(str[0]);
-            exit(1);
-        }
-    }
-    else
-        wait(NULL);
-    return(0);
+	if (WIFSIGNALED(status))
+		data->exit_status = 128 + WTERMSIG(status);
+	else if (WIFEXITED(status))
+		data->exit_status = WEXITSTATUS(status);
 }
-void execution_cas(char **args, t_env *env_list, t_data *data)
+
+void	free_exit_child(t_data *data, t_alloc **head, int i)
 {
-    char **envs = convert_env_list_to_array(env_list, data);
-    if (ft_strcmp(args[0], "cd") == 0)
-        cd(args);
-    else if (ft_strcmp(args[0], "exit") == 0)
-        exit_program(0);
-	else if (ft_strcmp(args[0], "export") == 0)
+	ft_lstclear_garbage(&data->alloc);
+	ft_lstclear_env(&data->env);
+	free(data);
+	ft_lstclear_garbage(head);
+	exit(i);
+}
+
+int	execute_child_process(char **str, char **env_list,
+		t_data *data, t_alloc **head)
+{
+	char	*path;
+
+	files(data->commands[0], data, head);
+	check_if_building(str, data, head);
+	path = get_path(env_list, str[0], data, head);
+	if (!path)
 	{
-		export(args, data);
+		if (access(str[0], F_OK) == -1)
+		{
+			ft_putstr_fd(str[0], 2);
+			ft_putstr_fd(": command not found\n", 2);
+		}
+		else
+			perror(str[0]);
+		free_exit_child(data, head, 127);
 	}
-    else
-        execu_cmd(args, envs, data);
+	if (execve(path, str, env_list) == -1)
+	{
+		(access(str[0], F_OK | X_OK),
+			perror(str[0]));
+		free_exit_child(data, head, 1);
+	}
+	return (0);
 }
 
-void addenv(char **env, t_env **head)
+int	execu_cmd(char **str, char **env_list, t_data *data)
 {
-    if (!env || !*env)
-        return;
-    int i = 0;
-    while (env[i])
-    {
-        t_env *node = malloc(sizeof(t_env));
-        node->env_var = strdup(env[i]);
-        node->next = NULL;
-        if (!*head)
-            *head = node;
-        else {
-            t_env *temp = *head;
-            while (temp->next)
-                temp = temp->next;
-            temp->next = node;
-        }
-        i++;
-    }
+	int		pid;
+	int		status;
+	t_alloc	*head;
+
+	pid = fork();
+	if (pid < 0)
+		free_exit(data);
+	if (pid == 0)
+	{
+		head = NULL;
+		execute_child_process(str, env_list, data, &head);
+	}
+	else
+	{
+		wait(&status);
+		exit_status(status, data);
+	}
+	return (0);
 }
 
-char **convert_env_list_to_array(t_env *head, t_data *data)
+void	execution_cas(char **args, t_env *env_list, t_data *data)
 {
-    int count = 0;
-    t_env *temp = head;
+	char	**envs;
 
-    while (temp) {
-        count++;
-        temp = temp->next;
-    }
-    char **envs = ft_malloc((count + 1) * sizeof(char *), data);
-    temp = head;
-    int i = 0;
-    while (temp) {
-        envs[i] = temp->env_var;
-        temp = temp->next;
-        i++;
-    }
-    envs[i] = NULL;
-    return envs;
+	envs = convert_env_list_to_array(env_list, data);
+	if (ft_strcmp(args[0], "cd") == 0)
+		cd(args, data);
+	else if (ft_strcmp(args[0], "exit") == 0)
+		exit_program(args, data);
+	else if (ft_strcmp(args[0], "export") == 0 && args[1] != NULL)
+		export(args, data);
+	else if (ft_strcmp(args[0], "unset") == 0)
+		unset(args, data);
+	else
+		execu_cmd(args, envs, data);
 }
 
-int    execute(t_data *data)
+int	execute(t_data *data)
 {
-    if(data->command_count == 1)
-    {
-        t_command *cmd = data->commands[0];
-        execution_cas(cmd->args, data->env, data);
-    }
-    else 
-        pipe_cas(data->commands,data->env,data);
-    return 0;
+	t_command	*cmd;
+
+	if (data->command_count == 1)
+	{
+		cmd = data->commands[0];
+		execution_cas(cmd->args, data->env, data);
+	}
+	else
+		pipe_cas(data->commands, data->env, data);
+	return (0);
 }

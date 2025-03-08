@@ -6,58 +6,103 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 22:40:12 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/02/23 15:29:06 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/07 23:53:47 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void outfile_cas(t_command *command)
+void	print_error_status(char *str, const char *msg)
 {
-        int output;
-
-        t_redir *outfiles = command->outfiles;
-        if(outfiles && (outfiles->type == OUTPUT_DIRECTION || outfiles->type == OUT_APPEND))
-        {
-            while(outfiles)
-            {
-                if(outfiles->type == OUTPUT_DIRECTION)
-                    output = open(outfiles->name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-                if(outfiles->type == OUT_APPEND)
-                output = open(outfiles->name, O_CREAT | O_WRONLY | O_APPEND, 0644);
-                if(!output)
-                    exit(1);
-                if(outfiles->next)
-                    close(output);
-                outfiles = outfiles->next;
-            }
-            close(1);
-            dup(output);
-            close(output);
-		}
-    
+	write(2, "minihell: ", 11);
+	write(2, str, ft_strlen(str));
+	write(2, ": ", 2);
+	write(2, msg, ft_strlen(msg));
+	write(2, "\n", 1);
 }
-void infile_cas(t_command *command)
+
+static	void	check_dir(char *str, t_data *data, t_alloc **head)
 {
-    int input;
-	t_redir *infiles = command->infiles;
-	if (infiles == NULL)
-		return;
-	while(infiles)
+	struct stat	path_stat;
+
+	if (stat(str, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 	{
-		if (infiles->type == INPUT_DIRECTION)
-			input = open(infiles->name, O_RDONLY, 0644);
-		else
-			input = infiles->here_doc_fd;
-		if(input == -1)
-		{
-			perror("eruer");	
-			exit(1);
-		}
-		if(infiles->next)
-			close(input);
-		infiles = infiles->next;
+		print_error_status(str, "Is a directory");
+		free_exit_child(data, head, 1);
 	}
-	dup2(input, 0);
+}
+
+void	outfile_cas(t_redir *outfiles, t_data *data, t_alloc **head)
+{
+	int	output;
+
+	if (outfiles->quote != S_QUOTE)
+	{
+		if (outfiles->name[0] == '$' && ft_strlen(outfiles->name) > 1)
+		{
+			print_error_status(outfiles->name, "ambiguous redirect");
+			free_exit_child(data, head, 1);
+		}
+	}
+	check_dir(outfiles->name, data, head);
+	if (outfiles->type == OUTPUT_DIRECTION)
+		output = open(outfiles->name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (outfiles->type == OUT_APPEND)
+		output = open(outfiles->name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (!output)
+	{
+		perror(outfiles->name);
+		free_exit_child(data, head, 1);
+	}
+	close(1);
+	if (dup(output) == -1)
+	{
+		perror("minihell");
+		close(output);
+		free_exit_child(data, head, 1);
+	}
+	close(output);
+}
+
+void	infile_cas(t_redir *infiles, t_data *data, t_alloc **head)
+{
+	int	input;
+
+	if (infiles->quote != S_QUOTE && infiles->type == INPUT_DIRECTION)
+	{
+		if (infiles->name[0] == '$' && ft_strlen(infiles->name) > 1)
+			print_error_status(infiles->name, "ambiguous redirect");
+	}
+	if (infiles->type == INPUT_DIRECTION)
+		input = open(infiles->name, O_RDONLY, 0644);
+	else
+		input = open(infiles->here_doc_filename, O_RDWR, 0644);
+	if (input == -1)
+	{
+		perror(infiles->name);
+		free_exit_child(data, head, 1);
+	}
+	close(0);
+	if (dup(input) == -1)
+	{
+		perror("minihell");
+		close(input);
+		free_exit_child(data, head, 1);
+	}
 	close(input);
+}
+
+void	files(t_command *command, t_data *data, t_alloc **head)
+{
+	t_redir	*files;
+
+	files = command->files;
+	while (files)
+	{
+		if (files->type == INPUT_DIRECTION || files->type == HERE_DOC)
+			infile_cas(files, data, head);
+		else if (files->type == OUTPUT_DIRECTION || files->type == OUT_APPEND)
+			outfile_cas(files, data, head);
+		files = files->next;
+	}
 }

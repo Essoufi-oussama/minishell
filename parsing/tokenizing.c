@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:33:05 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/02/25 10:16:24 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:13:27 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static void	set_previous_part(t_token *token, int *i, char *str, int quote)
 {
 	token->part_of_previous = 0;
 	if ((quote == D_QUOTE || quote == S_QUOTE) && *i - 1 > 0
-		&& is_word_char(str[*i - 2]))
+		&& w_ch(str[*i - 2]))
 		token->part_of_previous = 1;
-	else if (quote == NO_QUOTE && *i > 0 && is_word_char(str[*i - 1]))
+	else if (quote == NO_QUOTE && *i > 0 && w_ch(str[*i - 1]))
 		token->part_of_previous = 1;
 }
 
@@ -59,47 +59,6 @@ t_token	*insert_token_arr_word(int *i, char *str, int quote, t_data *data)
 	return (token);
 }
 
-void	insert_other_ops(t_token *token, char *str, t_data *data)
-{
-	char	*new;
-
-	if (str[0] == '|')
-		token->type = PIPE;
-	else if (str[0] == '<')
-		token->type = INPUT_DIRECTION;
-	else if (str[0] == '>')
-		token->type = OUTPUT_DIRECTION;
-	new = ft_malloc(sizeof(char) * 2, data);
-	ft_strlcpy(new, str, 2);
-	token->content = new;
-}
-
-t_token	*insert_token_arr_op(int *i, char *str, t_data *data)
-{
-	t_token	*token;
-
-	token = ft_malloc(sizeof(t_token), data);
-	if (str[0] == '<' && str[1] == '<')
-	{
-		token->type = HERE_DOC;
-		token->content = ft_strdup("<<", data);
-		*i += 1;
-	}
-	else if (str[0] == '>' && str[1] == '>')
-	{
-		token->type = OUT_APPEND;
-		token->content = ft_strdup(">>", data);
-		*i += 1;
-	}
-	else
-		insert_other_ops(token, str, data);
-	token->quoted = 0;
-	token->expandable = 0;
-	token->part_of_previous = 0;
-	*i += 1;
-	return (token);
-}
-
 void	loop_token_arr(char *str, t_token **token_arr, t_data *data)
 {
 	int		i;
@@ -119,7 +78,7 @@ void	loop_token_arr(char *str, t_token **token_arr, t_data *data)
 				token_arr[j++] = insert_token_arr_word(&i, str, D_QUOTE, data);
 			i++;
 		}
-		else if (is_word_char(str[i]) && !is_quote(str[i]))
+		else if (w_ch(str[i]) && !is_quote(str[i]))
 			token_arr[j++] = insert_token_arr_word(&i, str, NO_QUOTE, data);
 		else if (to_handle(str[i]))
 			token_arr[j++] = insert_token_arr_op(&i, str + i, data);
@@ -129,21 +88,12 @@ void	loop_token_arr(char *str, t_token **token_arr, t_data *data)
 	token_arr[j] = NULL;
 }
 
-void	tokenize(t_data *data)
+void	tokenize(t_data *data, char *cmd)
 {
 	int		tokens_count;
 
-	tokens_count = count_tokens(data->line);
+	tokens_count = count_tokens(cmd);
 	data->token_size = tokens_count;
 	data->tokens = ft_malloc(sizeof(t_token *) * (tokens_count + 1), data);
-	loop_token_arr(data->line, data->tokens, data);
-}
-
-void	tokenize_pipe(t_data *data)
-{
-	int		tokens_count;
-
-	tokens_count = count_tokens(data->pipe_line);
-	data->readline_tokens = ft_malloc(sizeof(t_token *) * (tokens_count + 1), data);
-	loop_token_arr(data->pipe_line, data->readline_tokens, data);
+	loop_token_arr(cmd, data->tokens, data);
 }
