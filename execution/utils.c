@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:26:24 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 00:15:52 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/08 16:57:11 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ char	*ft_strncpy(char *dest, char *src, int n)
 void	sigint_handler(int sig)
 {
 	(void)sig;
+	if(g_in_readline == 0)
+		write(1, "\n", 1);
 	if (g_in_readline == 1)
 	{
 		write(1, "\n", 1);
