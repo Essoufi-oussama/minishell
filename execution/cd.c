@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 16:53:16 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/09 06:32:07 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static int	update_pwd_and_oldpwd(t_data *data, char *prev_wd)
 {
 	char	cwd[PATH_MAX];
 	char	*path;
+	char	*path2;
 	int		exit_code;
 
 	exit_code = 0;
@@ -38,8 +39,9 @@ static int	update_pwd_and_oldpwd(t_data *data, char *prev_wd)
 			"getcwd: cannot access parent directories");
 		if (prev_wd == NULL)
 			return (1);
-		path = ft_strjoin(prev_wd, "/..", data);
-		check_add(ft_strjoin("PWD=", path, data), data);
+		path = ft_strjoin(prev_wd, "/", data);
+		path2 = ft_strjoin(path, data->path, data);
+		check_add(ft_strjoin("PWD=", path2, data), data);
 		exit_code = 1;
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:26:24 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 16:57:11 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/09 06:50:23 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*ft_strncpy(char *dest, char *src, int n)
 void	sigint_handler(int sig)
 {
 	(void)sig;
-	if(g_in_readline == 0)
+	if (g_in_readline == 0)
 		write(1, "\n", 1);
 	if (g_in_readline == 1)
 	{
@@ -67,7 +67,7 @@ char	*ftt_strdup(char *s1)
 	return (d);
 }
 
-char	*ft_strdup2(char *s1, t_data *data1 ,t_alloc **data)
+char	*ft_strdup2(char *s1, t_data *data1, t_alloc **data)
 {
 	size_t	i;
 	char	*s2;
@@ -84,7 +84,7 @@ char	*ft_strdup2(char *s1, t_data *data1 ,t_alloc **data)
 	return (s2);
 }
 
-char	*ft_strjoin2(char *s1, char*s2, t_data *data1 ,t_alloc **data)
+char	*ft_strjoin2(char *s1, char*s2, t_data *data1, t_alloc **data)
 {
 	char	*str;
 	size_t	i;

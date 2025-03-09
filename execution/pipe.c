@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:06:52 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 00:11:22 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/09 06:49:08 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	first_child(t_command *command, t_env *env_list, t_data *data)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		dup2(fd[1], 1);
+		ft_dup2(fd[1], 1, data);
 		close(fd[1]);
 		execute_command(command->args, env, data, command);
 	}
@@ -87,11 +87,9 @@ int	mid_childs(int fd_write, t_command *command, t_data *data, t_env *env_list)
 	}
 	if (pid == 0)
 	{
-		dup2(fd_write, 0);
-		dup2(fd[1], 1);
-		close(fd_write);
-		close(fd[1]);
-		close(fd[0]);
+		ft_dup2(fd_write, 0, data);
+		ft_dup2(fd[1], 1, data);
+		(close(fd_write), close(fd[1]), close(fd[0]));
 		execute_command(command->args, env, data, command);
 	}
 	close(fd_write);
@@ -115,7 +113,7 @@ void	last_child(int fd_write, t_command *command,
 	}
 	if (pid == 0)
 	{
-		dup2(fd_write, 0);
+		ft_dup2(fd_write, 0, data);
 		close(fd_write);
 		execute_command(command->args, env, data, command);
 	}

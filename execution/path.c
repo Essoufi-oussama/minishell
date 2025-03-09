@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 13:31:32 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 17:04:16 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/09 06:51:54 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ char	*get_path(char **env, char *cmp, t_data *data, t_alloc **head)
 
 	if (!cmp || !*cmp)
 		return (NULL);
-	if (stat(cmp, &path_stat) == 0 && S_ISDIR(path_stat.st_mode) && ft_strchr(cmp, '/'))
+	if (stat(cmp, &path_stat) == 0
+		&& S_ISDIR(path_stat.st_mode) && ft_strchr(cmp, '/'))
 	{
 		print_error_status(cmp, "Is a directory");
 		free_exit_child(data, head, 126);

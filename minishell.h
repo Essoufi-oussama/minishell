@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 23:02:30 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/09 06:47:44 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct s_command
 typedef struct s_data
 {
 	char		*line;
+	char		*path;
 	char		*pipe_line;
 	t_env		*env;
 	int			exit_status;
@@ -220,5 +221,6 @@ void	append_env(t_env *node, char *new_value,
 void	execute_command(char **argv, char **env, t_data *data,
 			t_command *command);
 void	ft_lstclear_env(t_env **lst);
+void	ft_dup2(int fd1, int fd2, t_data *data);
 
 #endif

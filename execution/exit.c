@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 17:30:41 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 00:29:54 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/09 06:42:42 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ long	ft_atol(char *str, t_data *data)
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		if (result > (LONG_MAX - (str[i] - '0')) / 10)
-			(printf("exit\nexit: %s: numeric argument required\n", str), free_exit2(data, 2));
+			(printf("exit\nexit: %s: numeric argument required\n", str),
+				free_exit2(data, 2));
 		result = result * 10 + (str[i] - '0');
 		i++;
 	}
@@ -46,9 +47,7 @@ long	ft_atol2(char *str, t_data *data, t_alloc **head)
 	int		sign;
 	int		i;
 
-	result = 0;
-	sign = 1;
-	i = 0;
+	(1) && (result = 0, sign = 1, i = 0);
 	while (str[i] == ' ')
 		i++;
 	if (str[i] == '-')

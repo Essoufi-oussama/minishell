@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:12:09 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 21:03:43 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/09 06:51:08 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,6 @@ void	exit_status(int status, t_data *data)
 		data->exit_status = 128 + WTERMSIG(status);
 	else if (WIFEXITED(status))
 		data->exit_status = WEXITSTATUS(status);
-}
-
-void	free_exit_child(t_data *data, t_alloc **head, int i)
-{
-	ft_lstclear_garbage(&data->alloc);
-	ft_lstclear_env(&data->env);
-	free(data);
-	ft_lstclear_garbage(head);
-	exit(i);
 }
 
 int	execute_child_process(char **str, char **env_list,
