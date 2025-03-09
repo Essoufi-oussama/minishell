@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:06:52 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 06:49:08 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/09 14:38:23 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,23 @@ int	first_child(t_command *command, t_env *env_list, t_data *data)
 	int		fd[2];
 	int		pid;
 	char	**env;
+	int		i;
 
 	env = convert_env_list_to_array(env_list, data);
 	if (pipe(fd) == -1)
 		free_exit(data);
 	pid = fork();
 	if (pid == -1)
-	{
-		close(fd[1]);
-		close(fd[0]);
-		free_exit(data);
-	}
+		(close(fd[1]), close(fd[0]), free_exit(data));
 	if (pid == 0)
 	{
 		close(fd[0]);
-		ft_dup2(fd[1], 1, data);
+		i = dup2(fd[1], 1);
+		if (i < 0)
+		{
+			(close(fd[0]),close(fd[1]));
+			free_exit(data);
+		}
 		close(fd[1]);
 		execute_command(command->args, env, data, command);
 	}
@@ -73,22 +75,22 @@ int	mid_childs(int fd_write, t_command *command, t_data *data, t_env *env_list)
 	int		fd[2];
 	int		pid;
 	char	**env;
+	int		i;
 
 	env = convert_env_list_to_array(env_list, data);
 	if (pipe(fd) == -1)
 		free_exit(data);
 	pid = fork();
 	if (pid == -1)
-	{
-		close(fd_write);
-		close(fd[1]);
-		close(fd[0]);
-		free_exit(data);
-	}
+		(close(fd_write), close(fd[1]), close(fd[0]), free_exit(data));
 	if (pid == 0)
 	{
-		ft_dup2(fd_write, 0, data);
-		ft_dup2(fd[1], 1, data);
+		i = dup2(fd_write, 0);
+		if (i < 0)
+			(close(fd_write), close(fd[1]), close(fd[0]), free_exit(data));
+		i = dup2(fd[1], 1);
+		if (i < 0)
+			(close(fd_write), close(fd[1]), close(fd[0]), free_exit(data));
 		(close(fd_write), close(fd[1]), close(fd[0]));
 		execute_command(command->args, env, data, command);
 	}
@@ -103,6 +105,7 @@ void	last_child(int fd_write, t_command *command,
 	int		pid;
 	int		status;
 	char	**env;
+	int		i;
 
 	env = convert_env_list_to_array(env_list, data);
 	pid = fork();
@@ -113,7 +116,9 @@ void	last_child(int fd_write, t_command *command,
 	}
 	if (pid == 0)
 	{
-		ft_dup2(fd_write, 0, data);
+		i = dup2(fd_write, 0);
+		if (i < 0)
+			(close(fd_write), free_exit(data));
 		close(fd_write);
 		execute_command(command->args, env, data, command);
 	}
