@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:08:50 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/06 02:38:14 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/10 21:13:36 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,12 @@ void	check_add(char *str, t_data *data)
 	int		key_len;
 	int		append;
 	char	*key;
-
+	
+	if (ft_strcmp("PATH",str) == 0 && data->default_path)
+	{
+		str = ft_strjoin(str,"=",data);
+		str = ft_strjoin(str,data->default_path,data);
+	}
 	rest = ft_strchr(str, '=');
 	if (!rest && ft_getenv2(str, data))
 		return ;

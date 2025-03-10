@@ -1,10 +1,3 @@
--> minihell cd /bin
--> minihell unset PATH
--> minihell ls
-ls: Success
--> minihell echo $?
-127
---------------------------------------------
 -> minihell exit yassine 31  42 4
 exit
 exit: too many arguments
@@ -16,7 +9,5 @@ exit: too many arguments
 -> minihell export 
 declare -x OLDPWD=""
 declare -x PWD="/goinfre/oessoufi/minishell/execution"
---------------------------------------------
-Export path in env -i should set the default path stored in the header as a PATH in export when "export PATH" is called
 --------------------------------------------
 think for export split
