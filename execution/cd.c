@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/10 22:49:58 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 22:58:13 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
 	char	*path;
 	char	*path2;
 
-	if (ft_getenv2("PWD", data) == NULL)
+	if (ft_getenv2("PWD", data) == NULL && ft_getenv2("OLDPWD", data) != NULL)
 	{
 		remove_env_var("OLDPWD", data);
 		check_add("OLDPWD", data);

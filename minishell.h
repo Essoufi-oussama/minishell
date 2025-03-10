@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 22:48:10 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 23:08:30 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ int		execute(t_data *data);
 void	pipe_cas(t_command **cmd, t_env *env_list, t_data *data);
 void	files(t_command *command, t_data *data, t_alloc **head);
 
-int		addenv(char **env, t_env **head);
+int	addenv(char **env, t_env **head);
 void	add_export(char *str, t_data *data);
 char	**sort_export(t_env *head, t_data *data, t_alloc **head_ch);
 void	check_add(char *str, t_data *data);

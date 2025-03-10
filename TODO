@@ -5,3 +5,9 @@ declare -x OLDPWD=""
 declare -x PWD="/goinfre/oessoufi/minishell/execution"
 --------------------------------------------
 think for export split
+-----------------------------------------------
+OLDPWD fenv
+______________
+unset PWD cd 1//1/
+----------------------------------------
+files fbuiltins
