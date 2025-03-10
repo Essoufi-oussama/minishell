@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 17:30:41 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 06:42:42 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/10 22:26:18 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,12 @@ void	exit_child(char **str, t_data *data, t_alloc **head)
 	{
 		if (str[2] != NULL)
 		{
+			if (!valid(str[1]))
+			{
+				write(2, "exit: ", 7);
+				print_error_status(str[1], ": numeric argument required\n");
+				free_exit_child(data, head, 2);
+			}
 			write(2, "exit: too many arguments\n", 26);
 			free_exit_child(data, head, 1);
 		}
@@ -123,6 +129,11 @@ void	exit_program(char **str, t_data *data)
 	{
 		if (str[2] != NULL)
 		{
+			if (!valid(str[1]))
+			{
+				printf("exit\nexit: %s: numeric argument required\n", str[1]);
+				free_exit2(data, 2);
+			}
 			printf("exit\n");
 			printf("exit: too many arguments\n");
 			data->exit_status = 1;

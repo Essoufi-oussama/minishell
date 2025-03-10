@@ -1,9 +1,3 @@
--> minihell exit yassine 31  42 4
-exit
-exit: too many arguments
--> minihell echo $?
-1
---------------------------------------------
  % env -i ./minishell 
 -> minihell cd execution/
 -> minihell export 
