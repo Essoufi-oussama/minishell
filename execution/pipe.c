@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:06:52 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 16:34:11 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:17:40 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,22 @@ int	first_child(t_command *command, t_env *env_list, t_data *data)
 	int		fd[2];
 	int		pid;
 	char	**env;
+	int		i;
 
 	env = convert_env_list_to_array(env_list, data);
 	if (pipe(fd) == -1)
 		return (perror("pipe"), -1);
 	pid = fork();
 	if (pid == -1)
-		return (perror("fork"), close(fd[0]), close(fd[1]), -1);
+	{
+		close(fd[1]);
+		close(fd[0]);
+		free_exit(data);
+	}
 	if (pid == 0)
 	{
 		close(fd[0]);
-		if (dup2(fd[1], 1) == -1)
-		{
-			close(fd[1]);
-			free_exit2(data, 1);
-		}
+		ft_dup2(fd[1], 1, data);
 		close(fd[1]);
 		execute_command(command->args, env, data, command);
 	}
@@ -73,6 +74,7 @@ int	mid_childs(int fd_write, t_command *command, t_data *data, t_env *env_list)
 	int		fd[2];
 	int		pid;
 	char	**env;
+	int		i;
 
 	env = convert_env_list_to_array(env_list, data);
 	if (pipe(fd) == -1)
@@ -83,12 +85,13 @@ int	mid_childs(int fd_write, t_command *command, t_data *data, t_env *env_list)
 		close(fd_write);
 		close(fd[1]);
 		close(fd[0]);
-		return (perror("fork"), -1);
+		free_exit(data);
 	}
 	if (pid == 0)
 	{
-		close(fd[0]);
-		ft_dup2(fd_write, fd[1], data);
+		ft_dup2(fd_write, 0, data);
+		ft_dup2(fd[1], 1, data);
+		(close(fd_write), close(fd[1]), close(fd[0]));
 		execute_command(command->args, env, data, command);
 	}
 	close(fd_write);
@@ -102,6 +105,7 @@ void	last_child(int fd_write, t_command *command,
 	int		pid;
 	int		status;
 	char	**env;
+	int		i;
 
 	env = convert_env_list_to_array(env_list, data);
 	pid = fork();
@@ -114,8 +118,7 @@ void	last_child(int fd_write, t_command *command,
 	}
 	if (pid == 0)
 	{
-		if (dup2(fd_write, 0) == -1)
-			return (close(fd_write), free_exit2(data, 1));
+		ft_dup2(fd_write, 0, data);
 		close(fd_write);
 		execute_command(command->args, env, data, command);
 	}
