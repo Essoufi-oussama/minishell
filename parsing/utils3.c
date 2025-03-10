@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 23:52:26 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 23:40:02 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:35:27 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	free_exit2(t_data *data, int i)
 {
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
+	if (data->default_path)
+		free(data->default_path);
 	free(data);
 	exit(i);
 }
@@ -44,6 +46,8 @@ void	free_exit(t_data *data)
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
 	i = data->exit_status;
+	if (data->default_path)
+		free(data->default_path);
 	free(data);
 	exit(i);
 }
