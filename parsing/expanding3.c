@@ -6,19 +6,11 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 00:09:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 18:06:03 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 19:50:59 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	ft_isalnum(int c)
-{
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-		|| (c >= '0' && c <= '9'))
-		return (c);
-	return (0);
-}
 
 int	ft_strcmp_env(const char *s1, const char *s2)
 {
