@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:06:52 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 06:49:08 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/09 16:34:11 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,18 @@ int	first_child(t_command *command, t_env *env_list, t_data *data)
 
 	env = convert_env_list_to_array(env_list, data);
 	if (pipe(fd) == -1)
-		free_exit(data);
+		return (perror("pipe"), -1);
 	pid = fork();
 	if (pid == -1)
-	{
-		close(fd[1]);
-		close(fd[0]);
-		free_exit(data);
-	}
+		return (perror("fork"), close(fd[0]), close(fd[1]), -1);
 	if (pid == 0)
 	{
 		close(fd[0]);
-		ft_dup2(fd[1], 1, data);
+		if (dup2(fd[1], 1) == -1)
+		{
+			close(fd[1]);
+			free_exit2(data, 1);
+		}
 		close(fd[1]);
 		execute_command(command->args, env, data, command);
 	}
@@ -76,20 +76,19 @@ int	mid_childs(int fd_write, t_command *command, t_data *data, t_env *env_list)
 
 	env = convert_env_list_to_array(env_list, data);
 	if (pipe(fd) == -1)
-		free_exit(data);
+		return (perror("pipe"), close(fd_write), -1);
 	pid = fork();
 	if (pid == -1)
 	{
 		close(fd_write);
 		close(fd[1]);
 		close(fd[0]);
-		free_exit(data);
+		return (perror("fork"), -1);
 	}
 	if (pid == 0)
 	{
-		ft_dup2(fd_write, 0, data);
-		ft_dup2(fd[1], 1, data);
-		(close(fd_write), close(fd[1]), close(fd[0]));
+		close(fd[0]);
+		ft_dup2(fd_write, fd[1], data);
 		execute_command(command->args, env, data, command);
 	}
 	close(fd_write);
@@ -109,11 +108,14 @@ void	last_child(int fd_write, t_command *command,
 	if (pid == -1)
 	{
 		close(fd_write);
-		free_exit(data);
+		perror("fork");
+		data->exit_status = 1;
+		return ;
 	}
 	if (pid == 0)
 	{
-		ft_dup2(fd_write, 0, data);
+		if (dup2(fd_write, 0) == -1)
+			return (close(fd_write), free_exit2(data, 1));
 		close(fd_write);
 		execute_command(command->args, env, data, command);
 	}
@@ -131,11 +133,21 @@ void	pipe_cas(t_command **cmd, t_env *env_list, t_data *data)
 
 	i = 0;
 	fd_write = first_child(cmd[0], env_list, data);
+	if (fd_write == -1)
+	{
+		data->exit_status = 1;
+		return ;
+	}
 	if (data->command_count >= 3)
 	{
 		while (i < (data->command_count) - 2)
 		{
 			fd_write = mid_childs(fd_write, cmd[i + 1], data, env_list);
+			if (fd_write == -1)
+			{
+				data->exit_status = 1;
+				return ;
+			}
 			i++;
 		}
 	}

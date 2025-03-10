@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/06 11:43:18 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:53:47 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_data	*env_init(char **env)
 	data->line = NULL;
 	data->tokens = NULL;
 	data->alloc = NULL;
+	data->default_path = NULL;
 	if (*env == NULL)
 	{
 		data->env = NULL;
@@ -102,6 +103,8 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	*data;
 
+	if(!isatty(0) || !isatty(1) || !isatty(2))
+		return(1);
 	(void)argc;
 	(void)argv;
 	signal(SIGINT, sigint_handler);

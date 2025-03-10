@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 00:09:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 22:57:23 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:58:57 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,27 @@ int	ft_isalnum(int c)
 	return (0);
 }
 
+int	ft_strcmp_env(const char *s1, const char *s2)
+{
+	size_t	i;
+	size_t	n;
+	
+	n = 0;
+	while (s1[n] && s1[n] != '=')
+		n++;
+	i = 0;
+	while (i < n && (s1[i] || s2[i]))
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	if (s2[i])
+		return (-1);
+	return (0);
+}
+
+
 char	*ft_getenv(char *str, t_data *data)
 {
 	t_env	*current;
@@ -30,7 +51,7 @@ char	*ft_getenv(char *str, t_data *data)
 	current = data->env;
 	while (current)
 	{
-		if (ft_strncmp(current->env_var, str, ft_strlen(str)) == 0)
+		if (ft_strcmp_env(current->env_var, str) == 0)
 		{
 			value = ft_strchr(current->env_var, '=');
 			if (value == NULL)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 09:54:22 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/09 14:46:23 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*get_home(t_env *env)
 	return (NULL);
 }
 
-static int	update_pwd_and_oldpwd(t_data *data, char *prev_wd)
+static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
 {
 	char	cwd[PATH_MAX];
 	char	*path;
@@ -43,7 +43,7 @@ static int	update_pwd_and_oldpwd(t_data *data, char *prev_wd)
 			path = ft_strjoin(prev_wd, "/", data);
 		else
 			path = prev_wd;
-		path2 = ft_strjoin(path, data->path, data);
+		path2 = ft_strjoin(path, path3, data);
 		check_add(ft_strjoin("PWD=", path2, data), data);
 		exit_code = 1;
 	}
@@ -66,7 +66,7 @@ void	cd_to_home(t_data *data, int *exit_status)
 		return ;
 	}
 	if (chdir(home) == 0)
-		data->exit_status = update_pwd_and_oldpwd(data, prev_wd);
+		data->exit_status = update_pwd_and_oldpwd(data, NULL, prev_wd);
 	else
 	{
 		perror(home);
@@ -80,7 +80,7 @@ void	cd_to_path(t_data *data, char *path, int *exit_status)
 
 	prev_wd = ft_getenv2("PWD", data);
 	if (chdir(path) == 0)
-		data->exit_status = update_pwd_and_oldpwd(data, prev_wd);
+		data->exit_status = update_pwd_and_oldpwd(data, path, prev_wd);
 	else
 	{
 		perror(path);
@@ -103,7 +103,7 @@ int	prepare_cd_path(char **str, t_data *data, char **target_path)
 	{
 		if (str[2] != NULL)
 		{
-			printf("cd: too many arguments\n");
+			write(2, "cd: too many arguments\n", 24);
 			return (0);
 		}
 		*target_path = str[1];

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:39:54 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 06:30:04 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/09 14:50:46 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,7 @@ void	cd(char **str, t_data *data)
 	if (str[1] == NULL)
 		cd_to_home(data, &data->exit_status);
 	else
-	{
-		data->path = str[1];
 		cd_to_path(data, str[1], &data->exit_status);
-	}
 }
 
 int	ft_isalpha(int c)

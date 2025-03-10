@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:43:05 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 06:51:13 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/09 16:21:42 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,23 @@ void	execute_command(char **argv, char **env,
 	}
 }
 
-void	ft_dup2(int fd1, int fd2, t_data *data)
+void	ft_dup2(int input, int output, t_data *data)
 {
-	int	i;
-
-	i = dup2(fd1, fd2);
-	if (i < 0)
-		free_exit(data);
+	if (dup2(input, 0) == -1)
+	{
+		perror("dup2");
+		close(input);
+		close(output);
+		free_exit2(data, 1);
+	}
+	close(input);
+	if (dup2(output, 1) == -1)
+	{
+		perror("dup2");
+		close(output);
+		free_exit2(data, 1);
+	}
+	close(output);
 }
 
 void	free_exit_child(t_data *data, t_alloc **head, int i)

@@ -1,0 +1,29 @@
+-> minihell export x="          "
+-> minihell $x
+minihell:               : command not found
+--------------------------------------------
+-> minihell cd /bin
+-> minihell unset PATH
+-> minihell ls
+ls: Success
+-> minihell echo $?
+127
+--------------------------------------------
+-> minihell exit yassine 31  42 4
+exit
+exit: too many arguments
+-> minihell echo $?
+1
+--------------------------------------------
+2 0x4cb5b7 in env_init /goinfre/oessoufi/minishell/main.c:35:24
+data->default_path;
+--------------------------------------------
+ % env -i ./minishell 
+-> minihell cd execution/
+-> minihell export 
+declare -x OLDPWD=""
+declare -x PWD="/goinfre/oessoufi/minishell/execution"
+--------------------------------------------
+Export path in env -i should set the default path stored in the header as a PATH in export when "export PATH" is called
+--------------------------------------------
+files in builtins
