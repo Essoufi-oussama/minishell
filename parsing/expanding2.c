@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 19:28:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 22:58:42 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:57:07 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,35 @@ void	handle_token(char **token, int count, int *i, t_data *data)
 		(*i)++;
 		*token = build_exp_str(*token, NULL, i, data);
 	}
+}
+
+char	*expand_token2(t_token **tokens, char *token, t_data *data)
+{
+	int		i;
+	int		count;
+	int		token_len;
+
+	i = 0;
+	while (token[i])
+	{
+		token_len = ft_strlen(token);
+		if (i >= token_len)
+			break ;
+		if (token[i] == '$')
+		{
+			count = 0;
+			while ((i + count) < token_len && token[i + count] == '$')
+				count++;
+			if (count == 1 && (i + count) >= token_len && tokens[1] && tokens[1]->part_of_previous)
+				return(token[i] = '\0', token);
+			if (count == 1 && (i + count) >= token_len)
+				break ;
+			handle_token(&token, count, &i, data);
+		}
+		else
+			i++;
+	}
+	return (token);
 }
 
 char	*expand_token(char *token, t_data *data)

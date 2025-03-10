@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 00:09:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 16:58:57 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 18:06:03 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	ft_strcmp_env(const char *s1, const char *s2)
 	return (0);
 }
 
-
 char	*ft_getenv(char *str, t_data *data)
 {
 	t_env	*current;
@@ -57,7 +56,7 @@ char	*ft_getenv(char *str, t_data *data)
 			if (value == NULL)
 				return (ft_strdup("", data));
 			else
-				return (ft_strdup(value + 1, data));
+				return (ft_strtrim_tab(ft_strdup(value + 1, data), data));
 		}
 		current = current->next;
 	}

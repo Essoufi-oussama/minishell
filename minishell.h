@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/09 16:21:59 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:49:14 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ void	print_error_status(char *str, const char *msg);
 void	exit_status(int status, t_data *data);
 void	free_exit(t_data *data);
 void	free_exit_child(t_data *data, t_alloc **head, int i);
+char	*expand_token2(t_token **tokens, char *token, t_data *data);
 
 void	echo(char **str);
 void	cd(char **str, t_data *data);

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 22:57:13 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:46:27 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	handle_no_quote_token(t_token **tokens, int *i, t_data *data)
 	}
 	else
 	{
-		tokens[*i]->content = expand_token(tokens[*i]->content, data);
+		tokens[*i]->content = expand_token2(tokens + *i, tokens[*i]->content, data);
 		if (ft_strlen(tokens[*i]->content) == 0)
 		{
 			if (tokens[*i + 1] && tokens[*i + 1]->part_of_previous)
