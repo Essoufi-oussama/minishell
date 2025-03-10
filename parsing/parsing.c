@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 20:59:54 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 22:32:10 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 22:42:10 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	command_init(t_command *command)
 {
 	command->args = NULL;
 	command->files = NULL;
+	command->is_export = 0;
 }
 
 t_redir	*in_heredoc(t_token **tokens, int *i, t_data *data)
@@ -56,6 +57,7 @@ t_command	*build_command(t_data *data, t_token **tokens, int n)
 
 	command = ft_malloc(sizeof(t_command), data);
 	command_init(command);
+	// check_export(data, tokens);
 	i = 0;
 	j = 0;
 	command->args = ft_malloc(sizeof(char *) * (arg_n(tokens, n) + 1), data);

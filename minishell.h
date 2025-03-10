@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 17:49:14 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/10 22:48:10 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_command
 {
 	char	**args;
 	int		arg_n;
+	int		is_export;
 	t_redir	*files;
 }	t_command;
 
@@ -222,5 +223,6 @@ void	execute_command(char **argv, char **env, t_data *data,
 			t_command *command);
 void	ft_lstclear_env(t_env **lst);
 void	ft_dup2(int input, int output, t_data *data);
+void	remove_env_var(char *var_name, t_data *data);
 
 #endif
