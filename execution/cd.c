@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 17:20:36 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:27:33 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
 	char	*path;
 	char	*path2;
 	int flag = 0;
-	data->pwd = NULL;
 
 	if (ft_getenv2("PWD", data) == NULL && ft_getenv2("OLDPWD", data) != NULL)
 	{
@@ -70,7 +69,7 @@ void	cd_to_home(t_data *data, int *exit_status)
 	char	*home;
 	char	*prev_wd;
 
-	prev_wd = ft_getenv2("PWD", data);
+	prev_wd = data->pwd;
 	home = get_home(data->env);
 	if (!home)
 	{
@@ -92,7 +91,7 @@ void	cd_to_path(t_data *data, char *path, int *exit_status)
 	char	*prev_wd;
 	char	s[PATH_MAX];
 
-	prev_wd = ft_getenv2("PWD", data);
+	prev_wd = data->pwd;
 	if (prev_wd == NULL)
 		prev_wd = getcwd(s, sizeof(s));
 	if (chdir(path) == 0)

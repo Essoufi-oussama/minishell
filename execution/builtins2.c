@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:39:54 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 14:50:46 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:34:19 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	cd_child(char **str, t_data *data, t_alloc **head)
 void	cd(char **str, t_data *data)
 {
 	data->exit_status = 0;
+	if(ft_getenv2("PWD", data) != NULL)
+		data->pwd = ft_getenv2("PWD", data);
 	if (str[1] != NULL && str[2] != NULL)
 	{
 		printf("cd: too many arguments\n");

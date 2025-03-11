@@ -1,9 +1,4 @@
- % env -i ./minishell 
--> minihell cd execution/
--> minihell export 
-declare -x OLDPWD=""
-declare -x PWD="/goinfre/oessoufi/minishell/execution"
---------------------------------------------
+
 think for export split
 -----------------------------------------------
 OLDPWD fenv
@@ -13,3 +8,6 @@ unset PWD cd 1//1/
 files fbuiltins
 
 grep env -i
+
+
+ctrl c $?
