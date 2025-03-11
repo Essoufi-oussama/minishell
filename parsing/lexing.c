@@ -6,13 +6,13 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:40:59 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/07 17:44:34 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 21:58:04 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_quotes(char *str, t_data *data)
+int	check_quotes(char *str)
 {
 	int		i;
 	char	quote;
@@ -28,7 +28,7 @@ int	check_quotes(char *str, t_data *data)
 			if (!str[i])
 			{
 				printf("Syntax error unclosed quote\n");
-				data->exit_status = 2;
+				exit_stat(2, 1);
 				return (1);
 			}
 		}
@@ -37,13 +37,13 @@ int	check_quotes(char *str, t_data *data)
 	return (0);
 }
 
-int	err(t_token *prev, t_token *curr, t_data *data)
+int	err(t_token *prev, t_token *curr)
 {
 	if (prev->type != PIPE
 		|| (prev->type == PIPE && curr->type == PIPE))
 	{
 		printf("syntax error near unexpected token '%s'\n", curr->content);
-		data->exit_status = 2;
+		exit_stat(2, 1);
 		return (1);
 	}
 	return (0);
@@ -62,7 +62,7 @@ int	check_consecutive_expressions(t_token **tokens, t_data *data)
 	while (tokens[i])
 	{
 		if (is_operation(previous->type) && is_operation(tokens[i]->type))
-			if (err(previous, tokens[i], data))
+			if (err(previous, tokens[i]))
 				return (1);
 		previous = tokens[i];
 		i++;
@@ -78,7 +78,7 @@ int	check_end_and_pipe(t_token **tokens, t_data *data)
 	if (tokens[0]->type == PIPE)
 	{
 		printf("synatx error near unexpected token '|'\n");
-		data->exit_status = 2;
+		exit_stat(2, 1);
 		return (1);
 	}
 	if (is_operation(tokens[i - 1]->type))
@@ -87,7 +87,7 @@ int	check_end_and_pipe(t_token **tokens, t_data *data)
 		if (g_in_readline == 4)
 			return (1);
 		printf("syntax error near unexpected token 'newline'\n");
-		data->exit_status = 2;
+		exit_stat(2, 1);
 		return (1);
 	}
 	return (0);

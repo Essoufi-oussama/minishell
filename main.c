@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/11 17:39:39 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/11 21:56:42 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_data	*env_init(char **env)
 		exit(1);
 	env_list = NULL;
 	addenv(env, &env_list);
-	data->exit_status = 0;
+	exit_stat(0, 1);
 	data->commands = NULL;
 	data->line = NULL;
 	data->tokens = NULL;
@@ -42,9 +42,18 @@ t_data	*env_init(char **env)
 	return (data);
 }
 
+int exit_stat(int status, int flag)
+{
+	static int s = 0;
+
+	if (flag != 0)
+		s = status;
+	return (s);
+}
+
 static void	process_command(t_data *data, char *cmd)
 {
-	if (check_quotes(cmd, data) != 1)
+	if (check_quotes(cmd) != 1)
 	{
 		tokenize(data, cmd);
 		if (lexing(data->tokens, data) == 1)
@@ -87,7 +96,7 @@ static void	read_command(t_data *data)
 	if (g_in_readline == 4)
 	{
 		dup2(2, 0);
-		data->exit_status = 130;
+		exit_stat(130, 1);
 	}
 	g_in_readline = 1;
 	data->line = readline("-> minihell ");

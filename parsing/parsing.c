@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 20:59:54 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 22:42:10 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 20:52:25 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ t_command	*build_command(t_data *data, t_token **tokens, int n)
 
 	command = ft_malloc(sizeof(t_command), data);
 	command_init(command);
-	// check_export(data, tokens);
+	check_export(data, tokens, command);
+	if (command->is_export)
+		return(build_command_export(command,tokens, data, n));
 	i = 0;
 	j = 0;
 	command->args = ft_malloc(sizeof(char *) * (arg_n(tokens, n) + 1), data);

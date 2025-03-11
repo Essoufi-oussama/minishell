@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 17:27:33 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/11 21:59:28 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
 	return (0);
 }
 
-void	cd_to_home(t_data *data, int *exit_status)
+void	cd_to_home(t_data *data)
 {
 	char	*home;
 	char	*prev_wd;
@@ -74,19 +74,19 @@ void	cd_to_home(t_data *data, int *exit_status)
 	if (!home)
 	{
 		printf("cd: HOME not set\n");
-		*exit_status = 1;
+		exit_stat(1, 1);;
 		return ;
 	}
 	if (chdir(home) == 0)
-		data->exit_status = update_pwd_and_oldpwd(data, NULL, prev_wd);
+		exit_stat(update_pwd_and_oldpwd(data, NULL, prev_wd), 1);
 	else
 	{
 		perror(home);
-		data->exit_status = 1;
+		exit_stat(1, 1);
 	}
 }
 
-void	cd_to_path(t_data *data, char *path, int *exit_status)
+void	cd_to_path(t_data *data, char *path)
 {
 	char	*prev_wd;
 	char	s[PATH_MAX];
@@ -95,11 +95,11 @@ void	cd_to_path(t_data *data, char *path, int *exit_status)
 	if (prev_wd == NULL)
 		prev_wd = getcwd(s, sizeof(s));
 	if (chdir(path) == 0)
-		data->exit_status = update_pwd_and_oldpwd(data, path, prev_wd);
+		exit_stat(update_pwd_and_oldpwd(data, path, prev_wd), 1);
 	else
 	{
 		perror(path);
-		*exit_status = 1;
+		exit_stat(1, 1);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 19:28:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 17:57:07 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 21:44:36 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	*get_expanded_value(char *token, int i, int *j, t_data *data)
 
 	*j = 0;
 	if (token[i] == '?')
-		return ((*j)++, ft_itoa(data->exit_status, data));
+		return ((*j)++, ft_itoa(exit_stat(69, 0), data));
 	if (!ft_isalnum(token[i]) && token[i] && token[i + *j] != '_')
 		return (ft_strdup("$", data));
 	else
@@ -129,26 +129,28 @@ char	*handle_multiple_dollars(char *token, int count, int i, t_data *data)
 	return (token);
 }
 
-char	*build_exp_str(char *token, char *previous, int *i, t_data *data)
+char *build_exp_str(char *token, char *previous, int *i, t_data *data)
 {
-	char	*next;
-	char	*expanded;
-	int		j;
-	int		k;
+    char *next;
+    char *expanded;
+    int j;
+    int k;
 
-	k = 0;
-	expanded = get_expanded_value(token, *i, &j, data);
-	previous = ft_malloc(sizeof(char) * *i, data);
-	ft_strlcpy(previous, token, *i);
-	while (token[*i + j + k])
-		k++;
-	next = ft_malloc(sizeof(char) * (k + 1), data);
-	ft_strlcpy(next, token + *i + j, k + 1);
-	token = ft_strjoin(previous, expanded, data);
-	token = ft_strjoin(token, next, data);
-	if (ft_strlen(token) == 0)
-		*i = 0;
-	else if (expanded && ft_strlen(expanded) == 1 && expanded[0] == '$')
-		(*i)++;
-	return (token);
+    k = 0;
+    expanded = get_expanded_value(token, *i, &j, data);
+    previous = ft_malloc(sizeof(char) * (*i), data);
+    ft_strlcpy(previous, token, *i);
+    while (token[*i + j + k])
+        k++;
+    next = ft_malloc(sizeof(char) * (k + 1), data);
+    ft_strlcpy(next, token + *i + j, k + 1);
+    token = ft_strjoin(previous, expanded, data);
+    token = ft_strjoin(token, next, data);
+    if (ft_strlen(token) == 0)
+        *i = 0;
+    else if (expanded && ft_strlen(expanded) == 1 && expanded[0] == '$')
+        (*i)++;
+    else
+        *i = ft_strlen(previous) + ft_strlen(expanded);
+    return (token);
 }

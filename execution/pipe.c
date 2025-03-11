@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:06:52 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/10 17:20:28 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 22:01:03 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	first_child(t_command *command, t_env *env_list, t_data *data)
 	pid = fork();
 	if (pid == -1)
 	{
-		data->exit_status = 1;
+		exit_stat(1, 1);
 		return (perror("fork"), close(fd[0]), close(fd[1]), -1);
 	}
 	if (pid == 0)
@@ -111,7 +111,7 @@ void	last_child(int fd_write, t_command *command,
 	{
 		close(fd_write);
 		perror("fork");
-		data->exit_status = 1;
+		exit_stat(1, 1);
 		return ;
 	}
 	if (pid == 0)
@@ -125,7 +125,7 @@ void	last_child(int fd_write, t_command *command,
 	waitpid(pid, &status, 0);
 	while (wait(NULL) != -1)
 		;
-	exit_status(status, data);
+	exit_status(status);
 }
 
 void	pipe_cas(t_command **cmd, t_env *env_list, t_data *data)
@@ -144,7 +144,7 @@ void	pipe_cas(t_command **cmd, t_env *env_list, t_data *data)
 			fd_write = mid_childs(fd_write, cmd[i + 1], data, env_list);
 			if (fd_write == -1)
 			{
-				data->exit_status = 1;
+				exit_stat(1, 1);
 				while (wait(NULL) != -1)
 					;
 				return ;

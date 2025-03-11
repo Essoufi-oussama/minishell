@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 03:09:01 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 00:33:18 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 21:51:24 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	export(char **str, t_data *data)
 	int	i;
 
 	i = 1;
-	data->exit_status = 0;
+	exit_stat(0, 1);
 	while (str[i])
 	{
 		if (!is_valid(str[i]))
@@ -58,7 +58,7 @@ void	export(char **str, t_data *data)
 			write(2, "bash: export: '", 15);
 			write(2, str[i], ft_strlen(str[i]));
 			write(2, "': not a valid identifier\n", 27);
-			data->exit_status = 1;
+			exit_stat(1, 1);
 		}
 		else
 			check_add(str[i], data);

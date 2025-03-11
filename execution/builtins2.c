@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:39:54 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 17:34:19 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/11 22:00:38 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,19 @@ void	cd_child(char **str, t_data *data, t_alloc **head)
 
 void	cd(char **str, t_data *data)
 {
-	data->exit_status = 0;
+	exit_stat(0, 1);
 	if(ft_getenv2("PWD", data) != NULL)
 		data->pwd = ft_getenv2("PWD", data);
 	if (str[1] != NULL && str[2] != NULL)
 	{
 		printf("cd: too many arguments\n");
-		data->exit_status = 1;
+		exit_stat(1, 1);
 		return ;
 	}
 	if (str[1] == NULL)
-		cd_to_home(data, &data->exit_status);
+		cd_to_home(data);
 	else
-		cd_to_path(data, str[1], &data->exit_status);
+		cd_to_path(data, str[1]);
 }
 
 int	ft_isalpha(int c)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:26:24 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 06:50:23 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/11 21:40:11 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	sigint_handler(int sig)
 	if (g_in_readline == 1)
 	{
 		write(1, "\n", 1);
+		exit_stat(130, 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
