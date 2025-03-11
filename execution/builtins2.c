@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:39:54 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 22:00:38 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 23:15:07 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	env(char **str, t_data *data, t_alloc **head)
 	if (str[1] != NULL)
 	{
 		write(2, "env: '", 7);
-		print_error_status(str[1], "' No such file or directory\n");
+		print_error_status(str[1], "' No such file or directory");
 		free_exit_child(data, head, 127);
 	}
 	while (current)
