@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   infile_outfile.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 22:40:12 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/08 21:04:37 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:48:48 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static	void	check_dir(char *str, t_data *data, t_alloc **head)
 	}
 }
 
-void	outfile_cas(t_redir *outfiles, t_data *data, t_alloc **head)
+void	outfile_cas(t_redir *outfiles, t_data *data, t_alloc **head,int flag)
 {
 	int	output;
 
@@ -51,25 +51,28 @@ void	outfile_cas(t_redir *outfiles, t_data *data, t_alloc **head)
 		perror(outfiles->name);
 		free_exit_child(data, head, 1);
 	}
-	close(1);
-	if (dup(output) == -1)
+	if(flag == 0)
 	{
-		perror("minihell");
-		close(output);
-		free_exit_child(data, head, 1);
+		close(1);
+		if (dup(output) == -1)
+		{
+			perror("minihell");
+			close(output);
+			free_exit_child(data, head, 1);
+		}
 	}
 	close(output);
 }
 
-void	infile_cas(t_redir *infiles, t_data *data, t_alloc **head)
+void	infile_cas(t_redir *infiles, t_data *data, t_alloc **head,int flag)
 {
 	int	input;
 
-	if (infiles->ambigious && infiles->type == INPUT_DIRECTION)
-	{
-		print_error_status(infiles->name, "ambiguous redirect");
-		free_exit_child(data, head, 1);
-	}
+		if (infiles->ambigious && infiles->type == INPUT_DIRECTION)
+		{
+			print_error_status(infiles->name, "ambiguous redirect");
+			free_exit_child(data, head, 1);
+		}
 	if (infiles->type == INPUT_DIRECTION)
 		input = open(infiles->name, O_RDONLY, 0644);
 	else
@@ -80,17 +83,20 @@ void	infile_cas(t_redir *infiles, t_data *data, t_alloc **head)
 		perror(infiles->name);
 		free_exit_child(data, head, 1);
 	}
-	close(0);
-	if (dup(input) == -1)
+	if(flag == 0)
 	{
-		perror("minihell: ");
-		close(input);
-		free_exit_child(data, head, 1);
+		close(0);
+		if (dup(input) == -1)
+		{
+			perror("minihell: ");
+			close(input);
+			free_exit_child(data, head, 1);
+		}
 	}
 	close(input);
 }
 
-void	files(t_command *command, t_data *data, t_alloc **head)
+void	files(t_command *command, t_data *data, t_alloc **head, int flag)
 {
 	t_redir	*files;
 
@@ -98,9 +104,9 @@ void	files(t_command *command, t_data *data, t_alloc **head)
 	while (files)
 	{
 		if (files->type == INPUT_DIRECTION || files->type == HERE_DOC)
-			infile_cas(files, data, head);
+			infile_cas(files, data, head,flag);
 		else if (files->type == OUTPUT_DIRECTION || files->type == OUT_APPEND)
-			outfile_cas(files, data, head);
+			outfile_cas(files, data, head,flag);
 		files = files->next;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/10 22:58:13 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:20:36 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,17 @@ static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
 	char	cwd[PATH_MAX];
 	char	*path;
 	char	*path2;
+	int flag = 0;
+	data->pwd = NULL;
 
 	if (ft_getenv2("PWD", data) == NULL && ft_getenv2("OLDPWD", data) != NULL)
 	{
 		remove_env_var("OLDPWD", data);
 		check_add("OLDPWD", data);
-		return (0);
+		flag = 1;
 	}
-	check_add(ft_strjoin("OLDPWD=", prev_wd, data), data);
+	else
+		check_add(ft_strjoin("OLDPWD=", prev_wd, data), data);
 	path = getcwd(cwd, PATH_MAX);
 	if (!path)
 	{
@@ -48,11 +51,17 @@ static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
 		else
 			path = prev_wd;
 		path2 = ft_strjoin(path, path3, data);
-		check_add(ft_strjoin("PWD=", path2, data), data);
+		data->pwd = ftt_strdup(path2);
+		printf("TRFGD\n");
+		if(flag == 0)
+			check_add(ft_strjoin("PWD=", path2, data), data);
 		return (1);
 	}
 	else
-		check_add(ft_strjoin("PWD=", path, data), data);
+	{
+		if(flag == 0)
+			check_add(ft_strjoin("PWD=", path, data), data);
+	}
 	return (0);
 }
 

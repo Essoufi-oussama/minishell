@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 20:13:56 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/06 00:42:53 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:46:25 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	pwd(t_data *data)
 	path = getcwd(s, sizeof(s));
 	if (!path)
 	{
-		test = ft_getenv2("PWD", data);
+		test = data->pwd;
 		if (!test)
 			perror("getcwd");
 		else

@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:12:09 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/09 06:51:08 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:47:47 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	execute_child_process(char **str, char **env_list,
 {
 	char	*path;
 
-	files(data->commands[0], data, head);
+	files(data->commands[0], data, head, 0);
 	check_if_building(str, data, head);
 	path = get_path(env_list, str[0], data, head);
 	if (!path)
@@ -74,7 +74,10 @@ int	execu_cmd(char **str, char **env_list, t_data *data)
 void	execution_cas(char **args, t_env *env_list, t_data *data)
 {
 	char	**envs;
+	t_alloc	*head;
 
+	head = NULL;
+	files(data->commands[0], data, &head, 1);
 	envs = convert_env_list_to_array(env_list, data);
 	if (ft_strcmp(args[0], "cd") == 0)
 		cd(args, data);

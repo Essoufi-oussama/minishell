@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:43:05 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/10 17:35:14 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:42:12 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	execute_command(char **argv, char **env,
 	t_alloc	*head;
 
 	head = NULL;
-	files(command, data, &head);
+	files(command, data, &head,0);
 	check_if_building(argv, data, &head);
 	path = get_path(env, argv[0], data, &head);
 	if (!path)

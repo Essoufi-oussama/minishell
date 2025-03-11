@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 23:08:30 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:41:52 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct s_command
 
 typedef struct s_data
 {
+	char		*pwd;
 	char		*line;
 	char		*pipe_line;
 	t_env		*env;
@@ -172,7 +173,7 @@ int		execu_cmd(char **str, char **env_list, t_data *data);
 char	**convert_env_list_to_array(t_env *head, t_data *data);
 int		execute(t_data *data);
 void	pipe_cas(t_command **cmd, t_env *env_list, t_data *data);
-void	files(t_command *command, t_data *data, t_alloc **head);
+void	files(t_command *command, t_data *data, t_alloc **head, int flag);
 
 int	addenv(char **env, t_env **head);
 void	add_export(char *str, t_data *data);
