@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:12:09 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/12 06:30:56 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/12 06:42:58 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,22 +78,22 @@ void	execution_cas(char **args, t_env *env_list, t_data *data)
 	envs = convert_env_list_to_array(env_list, data);
 	if (ft_strcmp(args[0], "cd") == 0)
 	{
-		if(files_p(data->commands[0]) != 0)
+		if(files_p(data->commands[0]) == 0)
 			cd(args, data);
 	}
 	else if (ft_strcmp(args[0], "exit") == 0)
 	{
-		if(files_p(data->commands[0]) != 0)
+		if(files_p(data->commands[0]) == 0)
 			exit_program(args, data);
 	}
 	else if (ft_strcmp(args[0], "export") == 0 && args[1] != NULL)
 	{
-		if(files_p(data->commands[0]) != 0)
+		if(files_p(data->commands[0]) == 0)
 			export(args, data);
 	}
 	else if (ft_strcmp(args[0], "unset") == 0)
 	{
-		if(files_p(data->commands[0]) != 0)
+		if(files_p(data->commands[0]) == 0)
 			unset(args, data);
 	}
 	else

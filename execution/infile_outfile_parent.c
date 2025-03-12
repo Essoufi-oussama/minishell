@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 22:05:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 06:32:35 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/12 06:44:01 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	files_p(t_command *command)
 	{
 		if (files->type == INPUT_DIRECTION || files->type == HERE_DOC)
         {
-			if (infile_cas_p(files) != 0)
+			if (infile_cas_p(files) == 0)
             {
                 exit_stat(1, 1);
                 return (1);
@@ -89,7 +89,7 @@ int	files_p(t_command *command)
         }
 		else if (files->type == OUTPUT_DIRECTION || files->type == OUT_APPEND)
 		{
-            if (outfile_cas_p(files) != 0)
+            if (outfile_cas_p(files) == 0)
             {
                 exit_stat(1, 1);
                 return (1);
