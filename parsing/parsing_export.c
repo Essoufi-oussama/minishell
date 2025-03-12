@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:51:57 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/11 20:55:04 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:40:05 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ void	check_export(t_data *data, t_token **tokens, t_command *command)
 	command->is_export = 0;
 	while (tokens[i])
 	{
-		if(is_operation(tokens[i]->type) && tokens[i]->type != PIPE)
+		if (is_operation(tokens[i]->type) && tokens[i]->type != PIPE)
 		{
 			i += 2;
-			while(tokens[i] && tokens[i]->part_of_previous)
+			while (tokens[i] && tokens[i]->part_of_previous)
 				i++;
 		}
 		else if (tokens[i]->type == WORD)
@@ -37,7 +37,7 @@ void	check_export(t_data *data, t_token **tokens, t_command *command)
 	}
 }
 
-static int	fih_space(const char *str)
+int	fih_space(const char *str)
 {
 	int	i;
 	int	equal_i;
@@ -49,14 +49,14 @@ static int	fih_space(const char *str)
 		if (str[i] == '=')
 		{
 			equal_i = i;
-			break;
+			break ;
 		}
 		i++;
 	}
 	if (equal_i == -1)
 		return (1);
 	i = 0;
-	while(str[i] && i <= equal_i)
+	while (str[i] && i <= equal_i)
 	{
 		if (str[i] == ' ')
 			return (1);
@@ -104,28 +104,9 @@ int	arg_x(t_token **tokens, int tokens_count)
 	return (count);
 }
 
-t_command	*build_command_export(t_command *command, t_token **tokens, t_data *data, int n)
+void	command_init(t_command *command)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	command->args = ft_malloc(sizeof(char *) * (arg_x(tokens, n) + 1), data);
-	while (i < n)
-	{
-		if (is_operation(tokens[i]->type) && tokens[i]->type != HERE_DOC)
-			lstadd(&command->files, insert_file(tokens, &i, data));
-		else if (tokens[i]->type == HERE_DOC)
-			lstadd(&command->files, in_heredoc(tokens, &i, data));
-		else if (tokens[i]->type == WORD && tokens[i]->split_later && fih_space(tokens[i]->content))
-			splt(get_full_name(tokens, &i, data), command->args, &j, data);
-		else if (tokens[i]->type == WORD)
-			command->args[j++] = get_full_name(tokens, &i, data);
-		else
-			i++;
-	}
-	command->args[j] = NULL;
-	command->arg_n = j;
-	return (command);
+	command->args = NULL;
+	command->files = NULL;
+	command->is_export = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 00:09:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 19:50:59 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:17:56 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_strcmp_env(const char *s1, const char *s2)
 {
 	size_t	i;
 	size_t	n;
-	
+
 	n = 0;
 	while (s1[n] && s1[n] != '=')
 		n++;

@@ -6,11 +6,16 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 16:23:14 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 23:03:14 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:19:01 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	w_ch(char c)
+{
+	return (!to_handle(c) && ft_isprint(c));
+}
 
 int	handle_quotes(char *str, int *i, char quote_char)
 {

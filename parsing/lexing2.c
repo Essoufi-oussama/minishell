@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 19:11:08 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/07 17:43:51 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:48:43 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,17 @@ void	open_heredocs(t_redir **head, t_data *data)
 	}	
 }
 
+static	void	init_heredoc(t_redir *new)
+{
+	new->next = NULL;
+	new->here_doc_expandable = 1;
+	new->here_doc_filename = NULL;
+	new->here_doc_trim = 0;
+	new->quote = 0;
+	new->ambigious = 0;
+	new->type = HERE_DOC;
+}
+
 void	handle_heredocs(t_token **tokens, t_data *data)
 {
 	t_redir	*head;
@@ -50,7 +61,7 @@ void	handle_heredocs(t_token **tokens, t_data *data)
 				i++;
 				new = ft_malloc(sizeof(t_redir), data);
 				new->name = get_full_name(tokens, &i, data);
-				new->next = NULL;
+				init_heredoc(new);
 				lstadd(&head, new);
 			}
 			else

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 17:40:51 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 23:01:05 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:18:55 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@ int	is_redir(int i)
 {
 	return (i == INPUT_DIRECTION || i == OUTPUT_DIRECTION
 		|| i == OUT_APPEND);
-}
-
-int	w_ch(char c)
-{
-	return (!to_handle(c) && ft_isprint(c));
 }
 
 int	ft_isdigit(int c)

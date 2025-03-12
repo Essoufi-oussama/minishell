@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/12 06:52:25 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:01:48 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
 		else
 			path = prev_wd;
 		path2 = ft_strjoin(path, path3, data);
+		free(data->pwd);
 		data->pwd = ftt_strdup(path2);
 		if(!data->pwd)
 			free_exit(data);

@@ -6,17 +6,38 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 20:59:54 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/11 20:52:25 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:44:50 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	command_init(t_command *command)
+t_command	*build_command_export(t_command *command, t_token **tokens,
+	t_data *data, int n)
 {
-	command->args = NULL;
-	command->files = NULL;
-	command->is_export = 0;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	command->args = ft_malloc(sizeof(char *) * (arg_x(tokens, n) + 1), data);
+	while (i < n)
+	{
+		if (is_operation(tokens[i]->type) && tokens[i]->type != HERE_DOC)
+			lstadd(&command->files, insert_file(tokens, &i, data));
+		else if (tokens[i]->type == HERE_DOC)
+			lstadd(&command->files, in_heredoc(tokens, &i, data));
+		else if (tokens[i]->type == WORD && tokens[i]->split_later
+			&& fih_space(tokens[i]->content))
+			splt(get_full_name(tokens, &i, data), command->args, &j, data);
+		else if (tokens[i]->type == WORD)
+			command->args[j++] = get_full_name(tokens, &i, data);
+		else
+			i++;
+	}
+	command->args[j] = NULL;
+	command->arg_n = j;
+	return (command);
 }
 
 t_redir	*in_heredoc(t_token **tokens, int *i, t_data *data)
@@ -49,9 +70,8 @@ void	splt(char *str, char **command, int *j, t_data *data)
 	}
 }
 
-t_command	*build_command(t_data *data, t_token **tokens, int n)
+t_command	*build_command(t_data *data, t_token **tokens, int i, int n)
 {
-	int			i;
 	int			j;
 	t_command	*command;
 
@@ -59,7 +79,7 @@ t_command	*build_command(t_data *data, t_token **tokens, int n)
 	command_init(command);
 	check_export(data, tokens, command);
 	if (command->is_export)
-		return(build_command_export(command,tokens, data, n));
+		return (build_command_export(command, tokens, data, n));
 	i = 0;
 	j = 0;
 	command->args = ft_malloc(sizeof(char *) * (arg_n(tokens, n) + 1), data);
@@ -76,9 +96,7 @@ t_command	*build_command(t_data *data, t_token **tokens, int n)
 		else
 			i++;
 	}
-	command->args[j] = NULL;
-	command->arg_n = j;
-	return (command);
+	return (command->args[j] = NULL, command->arg_n = j, command);
 }
 
 void	parse(t_data *data)
@@ -97,7 +115,7 @@ void	parse(t_data *data)
 		j = 0;
 		while (tokens[j] && tokens[j]->type != PIPE)
 			j++;
-		data->commands[i++] = build_command(data, tokens, j);
+		data->commands[i++] = build_command(data, tokens, 0, j);
 		if (tokens[j] && tokens[j]->type == PIPE)
 			j++;
 		tokens = tokens + j;

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 23:52:26 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/11 21:50:01 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:50:53 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,15 @@ void	free_exit2(t_data *data, int i)
 
 void	free_exit(t_data *data)
 {
-	int	i;
-
 	printf("exit\n");
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
-	i = exit_stat(0, 0);
 	if (data->default_path)
 		free(data->default_path);
+	if (data->pwd)
+		free(data->pwd);
 	free(data);
-	exit(i);
+	exit(exit_stat(0, 0));
 }
 
 void	destroy_heredocs(t_data *data)
@@ -64,7 +63,10 @@ void	destroy_heredocs(t_data *data)
 		while (curr)
 		{
 			if (curr->type == HERE_DOC)
-				unlink(curr->here_doc_filename);
+			{
+				if (access(curr->here_doc_filename, F_OK))
+					unlink(curr->here_doc_filename);
+			}
 			curr = curr->next;
 		}
 		i++;

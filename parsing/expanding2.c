@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 19:28:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/11 21:44:36 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:12:49 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,28 +23,28 @@ void	handle_token(char **token, int count, int *i, t_data *data)
 	}
 }
 
-char	*expand_token2(t_token **tokens, char *token, t_data *data)
+char	*expand_token2(t_token **t, char *token, t_data *data)
 {
 	int		i;
-	int		count;
-	int		token_len;
+	int		n;
+	int		l;
 
 	i = 0;
 	while (token[i])
 	{
-		token_len = ft_strlen(token);
-		if (i >= token_len)
+		l = ft_strlen(token);
+		if (i >= l)
 			break ;
 		if (token[i] == '$')
 		{
-			count = 0;
-			while ((i + count) < token_len && token[i + count] == '$')
-				count++;
-			if (count == 1 && (i + count) >= token_len && tokens[1] && tokens[1]->part_of_previous)
-				return(token[i] = '\0', token);
-			if (count == 1 && (i + count) >= token_len)
+			n = 0;
+			while ((i + n) < l && token[i + n] == '$')
+				n++;
+			if (n == 1 && (i + n) >= l && t[1] && t[1]->part_of_previous)
+				return (token[i] = '\0', token);
+			if (n == 1 && (i + n) >= l)
 				break ;
-			handle_token(&token, count, &i, data);
+			handle_token(&token, n, &i, data);
 		}
 		else
 			i++;
@@ -127,30 +127,4 @@ char	*handle_multiple_dollars(char *token, int count, int i, t_data *data)
 	token = ft_strjoin(previous, expanded, data);
 	token = ft_strjoin(token, next, data);
 	return (token);
-}
-
-char *build_exp_str(char *token, char *previous, int *i, t_data *data)
-{
-    char *next;
-    char *expanded;
-    int j;
-    int k;
-
-    k = 0;
-    expanded = get_expanded_value(token, *i, &j, data);
-    previous = ft_malloc(sizeof(char) * (*i), data);
-    ft_strlcpy(previous, token, *i);
-    while (token[*i + j + k])
-        k++;
-    next = ft_malloc(sizeof(char) * (k + 1), data);
-    ft_strlcpy(next, token + *i + j, k + 1);
-    token = ft_strjoin(previous, expanded, data);
-    token = ft_strjoin(token, next, data);
-    if (ft_strlen(token) == 0)
-        *i = 0;
-    else if (expanded && ft_strlen(expanded) == 1 && expanded[0] == '$')
-        (*i)++;
-    else
-        *i = ft_strlen(previous) + ft_strlen(expanded);
-    return (token);
 }

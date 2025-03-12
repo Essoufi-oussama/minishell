@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 08:11:41 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:40:19 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,6 @@ void	remove_token(t_token **tokens, int index);
 void	here_doc(t_redir *infile, t_data *data);
 
 void	check_export(t_data *data, t_token **tokens, t_command *command);
-t_command	*build_command_export(t_command *command, t_token **tokens, t_data *data, int n);
 t_redir	*in_heredoc(t_token **tokens, int *i, t_data *data);
 void	parse(t_data *data);
 int		count_commands(t_token **tokens);
@@ -180,7 +179,7 @@ int		execute(t_data *data);
 void	pipe_cas(t_command **cmd, t_env *env_list, t_data *data);
 void	files(t_command *command, t_data *data, t_alloc **head);
 
-int	addenv(char **env, t_env **head);
+int		addenv(char **env, t_env **head);
 void	add_export(char *str, t_data *data);
 char	**sort_export(t_env *head, t_data *data, t_alloc **head_ch);
 void	check_add(char *str, t_data *data);
@@ -231,5 +230,8 @@ void	ft_lstclear_env(t_env **lst);
 void	ft_dup2(int input, int output, t_data *data);
 void	remove_env_var(char *var_name, t_data *data);
 int		files_p(t_command *command);
+void	command_init(t_command *command);
+int		arg_x(t_token **tokens, int tokens_count);
+int		fih_space(const char *str);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 08:12:40 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:58:43 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,6 @@ t_data	*env_init(char **env)
 	else
 		data->env = env_list;
 	return (data);
-}
-
-int exit_stat(int status, int flag)
-{
-	static int s = 0;
-
-	if (flag != 0)
-		s = status;
-	return (s);
 }
 
 static void	process_command(t_data *data, char *cmd)
@@ -113,8 +104,8 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	*data;
 
-	if(!isatty(0) || !isatty(1) || !isatty(2))
-		return(1);
+	if (!isatty(0) || !isatty(1) || !isatty(2))
+		return (1);
 	(void)argc;
 	(void)argv;
 	signal(SIGINT, sigint_handler);

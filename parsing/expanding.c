@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:19:20 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/10 17:46:27 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:17:36 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ void	handle_no_quote_token(t_token **tokens, int *i, t_data *data)
 	}
 	else
 	{
-		tokens[*i]->content = expand_token2(tokens + *i, tokens[*i]->content, data);
+		tokens[*i]->content = expand_token2(tokens + *i,
+				tokens[*i]->content, data);
 		if (ft_strlen(tokens[*i]->content) == 0)
 		{
 			if (tokens[*i + 1] && tokens[*i + 1]->part_of_previous)
@@ -93,4 +94,30 @@ void	expanding(t_data *data)
 		else if (tokens[i]->quoted == NO_QUOTE)
 			handle_no_quote_token(tokens, &i, data);
 	}
+}
+
+char	*build_exp_str(char *token, char *previous, int *i, t_data *data)
+{
+	char	*next;
+	char	*expanded;
+	int		j;
+	int		k;
+
+	k = 0;
+	expanded = get_expanded_value(token, *i, &j, data);
+	previous = ft_malloc(sizeof(char) * (*i), data);
+	ft_strlcpy(previous, token, *i);
+	while (token[*i + j + k])
+		k++;
+	next = ft_malloc(sizeof(char) * (k + 1), data);
+	ft_strlcpy(next, token + *i + j, k + 1);
+	token = ft_strjoin(previous, expanded, data);
+	token = ft_strjoin(token, next, data);
+	if (ft_strlen(token) == 0)
+		*i = 0;
+	else if (expanded && ft_strlen(expanded) == 1 && expanded[0] == '$')
+		(*i)++;
+	else
+		*i = ft_strlen(previous) + ft_strlen(expanded);
+	return (token);
 }

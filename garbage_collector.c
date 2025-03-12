@@ -6,11 +6,20 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 17:30:30 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/08 00:14:15 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:58:23 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	exit_stat(int status, int flag)
+{
+	static int	s = 0;
+
+	if (flag != 0)
+		s = status;
+	return (s);
+}
 
 void	ft_lstclear_garbage(t_alloc **lst)
 {
@@ -43,10 +52,16 @@ void	*ft_malloc(size_t size, t_data *data)
 
 	new = malloc(sizeof(t_alloc));
 	if (new == NULL)
+	{
+		write(2, "fatal error: cannot allocate memory\n", 37);
+		exit_stat(1, 1);
 		free_exit(data);
+	}
 	allocated = malloc(size);
 	if (allocated == NULL)
 	{
+		write(2, "fatal error: cannot allocate memory\n", 37);
+		exit_stat(1, 1);
 		free(new);
 		free_exit(data);
 	}
@@ -64,7 +79,7 @@ void	*ft_malloc2(size_t size, t_data *data, t_alloc **child)
 	new = malloc(sizeof(t_alloc));
 	if (new == NULL)
 	{
-		write(2, "malloc failure in child\n", 25);
+		write(2, "fatal error: cannot allocate memory\n", 37);
 		free_exit_child(data, child, 1);
 	}
 	allocated = malloc(size);

@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:39:54 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 23:15:07 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:01:18 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,11 @@ void	cd(char **str, t_data *data)
 {
 	exit_stat(0, 1);
 	if(ft_getenv2("PWD", data) != NULL)
-		data->pwd = ft_getenv2("PWD", data);
+	{
+		free(data->pwd);
+		data->pwd = NULL;
+		data->pwd = ftt_strdup(ft_getenv2("PWD", data));
+	}
 	if (str[1] != NULL && str[2] != NULL)
 	{
 		printf("cd: too many arguments\n");
