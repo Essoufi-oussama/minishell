@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:40:59 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/11 21:58:04 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 23:26:25 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,12 @@ int	err(t_token *prev, t_token *curr)
 	return (0);
 }
 
-int	check_consecutive_expressions(t_token **tokens, t_data *data)
+int	check_consecutive_expressions(t_token **tokens)
 {
 	int		i;
 	t_token	*previous;
 
 	i = 0;
-	if (tokens[0]->type == INPUT_DIRECTION)
-		if (check_end_and_pipe(tokens, data) == 1)
-			return (1);
 	previous = tokens[i++];
 	while (tokens[i])
 	{
@@ -100,7 +97,7 @@ int	lexing(t_token **tokens, t_data *data)
 	i = 0;
 	if (tokens[i] == NULL)
 		return (0);
-	if (check_consecutive_expressions(tokens, data) == 1)
+	if (check_consecutive_expressions(tokens) == 1)
 		return (0);
 	if (check_end_and_pipe(tokens, data) == 1)
 		return (0);

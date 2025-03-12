@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 19:40:19 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 23:26:37 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int		w_ch(char c);
 int		to_handle(char c);
 int		handle_quotes(char *str, int *i, char quote_char);
 int		count_no_quotes(char *str);
-int		check_consecutive_expressions(t_token **tokens, t_data *data);
+int		check_consecutive_expressions(t_token **tokens);
 int		check_end_and_pipe(t_token **tokens, t_data *data);
 
 void	tokenize(t_data *data, char *cmd);
