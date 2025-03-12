@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 21:59:28 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 04:53:38 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
 			path = prev_wd;
 		path2 = ft_strjoin(path, path3, data);
 		data->pwd = ftt_strdup(path2);
-		printf("TRFGD\n");
+		if(!data->pwd)
+			free_exit(data);
 		if(flag == 0)
 			check_add(ft_strjoin("PWD=", path2, data), data);
 		return (1);

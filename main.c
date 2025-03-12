@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/11 21:56:42 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/12 04:35:02 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_data	*env_init(char **env)
 	addenv(env, &env_list);
 	exit_stat(0, 1);
 	data->commands = NULL;
+	data->pwd = NULL;
 	data->line = NULL;
 	data->tokens = NULL;
 	data->alloc = NULL;
