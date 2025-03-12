@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:41:57 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 17:39:28 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/12 08:11:57 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	addenv(char **env, t_env **head)
 		last = node;
 		i++;
 	}
-	
 	return (1);
 }
 

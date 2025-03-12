@@ -6,7 +6,7 @@
 /*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:12:09 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/12 06:42:58 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/12 08:18:22 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ int	execute(t_data *data)
 {
 	t_command	*cmd;
 
+	if(data->env != NULL && ft_getenv2("OLDPWD",data) == NULL)
+		add_export("OLDPWD",data);
 	if (data->command_count == 1)
 	{
 		cmd = data->commands[0];
