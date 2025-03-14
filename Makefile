@@ -2,7 +2,7 @@ SRCS= main.c parsing/tokenizing.c parsing/tokenizing2.c parsing/lexing.c parsing
 	parsing/counting_tokens.c parsing/expanding.c parsing/expanding2.c  parsing/expanding3.c parsing/ft_split.c  parsing/lexing2.c execution/infile_outfile_parent.c\
 	garbage_collector.c parsing/parsing.c parsing/parsing2.c parsing/parsing3.c execution/builtins.c execution/command.c parsing/parsing_export.c \
 	execution/path.c execution/utils.c execution/cd.c execution/pipe_utils.c execution/builtins2.c execution/export_utils.c execution/infile_outfile.c \
-	execution/export2.c execution/export3.c execution/env.c execution/exit.c execution/pipe.c execution/export.c execution/utils2.c
+	execution/export2.c execution/export3.c execution/env.c execution/exit.c execution/pipe.c execution/export.c execution/utils2.c shlvl_init.c
 OBJS = $(SRCS:%.c=%.o)
 HEADER = minishell.h 
 

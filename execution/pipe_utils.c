@@ -82,7 +82,6 @@ void	free_exit_child(t_data *data, t_alloc **head, int i)
 		free(data->default_path);
 	if(data->pwd)
 		free(data->pwd);
-	free(data);
 	ft_lstclear_garbage(head);
 	exit(i);
 }

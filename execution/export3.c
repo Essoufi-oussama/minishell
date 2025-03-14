@@ -83,8 +83,8 @@ void	check_add(char *str, t_data *data)
 	
 	if (ft_strcmp("PATH",str) == 0 && data->default_path)
 	{
-		str = ft_strjoin(str,"=",data);
-		str = ft_strjoin(str,data->default_path,data);
+		str = ft_strjoin(str, "=", data);
+		str = ft_strjoin(str, data->default_path, data);
 	}
 	rest = ft_strchr(str, '=');
 	if (!rest && ft_getenv2(str, data))

@@ -16,7 +16,7 @@ void	update_existing(t_env *current, char *str, char *rest, t_data *data)
 {
 	char	*current_rest;
 
-	if (*(rest - 1) == '+')
+	if (rest && *(rest - 1) == '+')
 	{
 		current_rest = ft_strchr(current->env_var, '=');
 		append_env(current, rest + 1, current_rest, data);

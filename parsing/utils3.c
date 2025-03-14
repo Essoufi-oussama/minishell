@@ -34,7 +34,8 @@ void	free_exit2(t_data *data, int i)
 	ft_lstclear_env(&data->env);
 	if (data->default_path)
 		free(data->default_path);
-	free(data);
+	if (data->pwd)
+		free(data->pwd);
 	exit(i);
 }
 
@@ -47,7 +48,6 @@ void	free_exit(t_data *data)
 		free(data->default_path);
 	if (data->pwd)
 		free(data->pwd);
-	free(data);
 	exit(exit_stat(0, 0));
 }
 

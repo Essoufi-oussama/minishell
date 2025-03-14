@@ -12,33 +12,6 @@
 
 #include "../minishell.h"
 
-int	addenv(char **env, t_env **head)
-{
-	int		i;
-	t_env	*last;
-	t_env	*node;
-
-	i = 0;
-	last = NULL;
-	while (env[i])
-	{
-		node = malloc(sizeof(t_env));
-		if (!node)
-			return (0);
-		node->env_var = ftt_strdup(env[i]);
-		if (!node->env_var)
-			return (free(node), 0);
-		node->next = NULL;
-		if (!*head)
-			*head = node;
-		else
-			last->next = node;
-		last = node;
-		i++;
-	}
-	return (1);
-}
-
 char	**convert_env_list_to_array(t_env *head, t_data *data)
 {
 	t_env	*temp;

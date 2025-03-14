@@ -91,19 +91,15 @@ typedef struct s_data
 {
 	char		*pwd;
 	char		*line;
-	char		*pipe_line;
 	t_env		*env;
-	int			exit_status;
 	t_command	**commands;
-	t_command	**readline_commands;
 	int			command_count;
-	int			readline_command_count;
 	t_token		**tokens;
 	int			token_size;
-	t_token		**readline_tokens;
 	t_alloc		*alloc;
-	t_alloc		*child_alloc;
 	char		*default_path;
+	int			*fds;
+	int			fd_count;
 }	t_data;
 
 int		count_tokens(char *str);
@@ -179,7 +175,7 @@ int		execute(t_data *data);
 void	pipe_cas(t_command **cmd, t_env *env_list, t_data *data);
 void	files(t_command *command, t_data *data, t_alloc **head);
 
-int		addenv(char **env, t_env **head);
+void		addenv(char **env, t_data *data);
 void	add_export(char *str, t_data *data);
 char	**sort_export(t_env *head, t_data *data, t_alloc **head_ch);
 void	check_add(char *str, t_data *data);
@@ -233,5 +229,7 @@ int		files_p(t_command *command);
 void	command_init(t_command *command);
 int		arg_x(t_token **tokens, int tokens_count);
 int		fih_space(const char *str);
+int		ft_strcmp_env(const char *s1, const char *s2);
+void	shlvl_init(t_data *data);
 
 #endif

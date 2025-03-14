@@ -34,7 +34,6 @@ void	ft_lstclear_garbage(t_alloc **lst)
 		free(*lst);
 		*lst = tmp;
 	}
-	*lst = NULL;
 }
 
 void	ft_lstadd_front(t_alloc **lst, t_alloc *new)

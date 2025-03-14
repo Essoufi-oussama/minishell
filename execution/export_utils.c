@@ -78,7 +78,10 @@ void	add_export(char *str, t_data *data)
 		free_exit(data);
 	new_node->env_var = ftt_strdup(str);
 	if (!new_node->env_var)
+	{
+		free(new_node);
 		free_exit(data);
+	}
 	new_node->next = NULL;
 	ft_lstadd_back2(&(data->env), new_node);
 }
