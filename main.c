@@ -139,10 +139,10 @@ int	main(int argc, char **argv, char **env)
 	rl_catch_signals = 0;
 	data_init(&data, argc, argv);
 	env_init(env, &data);
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, noting);
 	while (1)
 	{
+		signal(SIGINT, sigint_handler);
+		signal(SIGQUIT, noting);
 		read_command(&data);
 		ft_lstclear_garbage(&data.alloc);
 		data.alloc = NULL;

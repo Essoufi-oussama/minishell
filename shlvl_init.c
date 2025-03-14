@@ -85,10 +85,12 @@ static void	shlvl_init_when_shlvl_exists(char *str, t_data *data)
 	t_env	*current;
 
 	shlvl = ft_strchr(str, '=');
-	if (shlvl == NULL || check_for_non_digits(shlvl))
+	if (shlvl == NULL)
 		number = 0;
+	else if(check_for_non_digits(shlvl + 1))
+		number = 0;	
 	else
-		number = ft_atoi(shlvl) + 1;
+		number = ft_atoi(shlvl + 1);
 	if (number < 0)
 		number = -1;
 	else if (number > 998)
@@ -110,16 +112,16 @@ static void	shlvl_init_when_shlvl_exists(char *str, t_data *data)
 		free_exit(data);
 }
 
-void	shlvl_init(t_data *data)
+void shlvl_init(t_data *data)
 {
-	char *str;
+	char *str = ft_getenv2("SHLVL", data);
 
-	str = ft_getenv2("SHLVL", data);
 	if (!str)
 	{
-		printf("HELLO\n");
 		check_add("SHLVL=1", data);
 	}
 	else
+	{
 		shlvl_init_when_shlvl_exists(str, data);
+	}
 }
