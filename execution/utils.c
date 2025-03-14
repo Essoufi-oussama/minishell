@@ -35,7 +35,7 @@ void	sigint_handler(int sig)
 	(void)sig;
 	if (g_in_readline == 1)
 	{
-		write(1, "\n", 1);
+		write(1, "^C\n", 3);
 		exit_stat(130, 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);

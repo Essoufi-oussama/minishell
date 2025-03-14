@@ -79,6 +79,7 @@ void	add_export(char *str, t_data *data)
 	new_node->env_var = ftt_strdup(str);
 	if (!new_node->env_var)
 	{
+		exit_stat(1, 1);
 		free(new_node);
 		free_exit(data);
 	}

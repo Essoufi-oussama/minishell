@@ -76,6 +76,7 @@ typedef struct s_redir
 	int				here_doc_trim;
 	int				quote;
 	int				ambigious;
+	int				here_doc_fd;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -100,6 +101,7 @@ typedef struct s_data
 	char		*default_path;
 	int			*fds;
 	int			fd_count;
+	int			fd_write;
 }	t_data;
 
 int		count_tokens(char *str);
@@ -128,7 +130,7 @@ char	*get_expanded_value(char *token, int i, int *j, t_data *data);
 int		skip_ops_except_pipe(t_token **tokens, int *current, t_data *data);
 void	handle_heredocs(t_token **tokens, t_data *data);
 void	remove_token(t_token **tokens, int index);
-void	here_doc(t_redir *infile, t_data *data);
+void	here_doc(t_redir *infile, int *j, t_data *data);
 
 void	check_export(t_data *data, t_token **tokens, t_command *command);
 t_redir	*in_heredoc(t_token **tokens, int *i, t_data *data);
@@ -231,5 +233,11 @@ int		arg_x(t_token **tokens, int tokens_count);
 int		fih_space(const char *str);
 int		ft_strcmp_env(const char *s1, const char *s2);
 void	shlvl_init(t_data *data);
+int		is_inenv(char *str, t_data *data);
+void	ft_putnbr_fd(int n, int fd);
+int		ft_atoi(const char *str);
+void	data_init(t_data *data, int argc, char **argv);
+void	env_init(char **env, t_data *data);
+char	*get_heredoc_name(t_data *data);
 
 #endif

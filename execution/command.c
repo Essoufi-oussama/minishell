@@ -104,8 +104,6 @@ int	execute(t_data *data)
 {
 	t_command	*cmd;
 
-	if(data->env != NULL && ft_getenv2("OLDPWD",data) == NULL)
-		add_export("OLDPWD",data);
 	if (data->command_count == 1)
 	{
 		cmd = data->commands[0];

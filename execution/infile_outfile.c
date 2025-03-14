@@ -65,7 +65,7 @@ void	infile_cas(t_redir *infiles, t_data *data, t_alloc **head)
 {
 	int	input;
 
-	if (infiles->ambigious && infiles->type == INPUT_DIRECTION)
+	if (infiles->type == INPUT_DIRECTION && infiles->ambigious)
 	{
 		print_error_status(infiles->name, "ambiguous redirect");
 		free_exit_child(data, head, 1);
@@ -73,7 +73,7 @@ void	infile_cas(t_redir *infiles, t_data *data, t_alloc **head)
 	if (infiles->type == INPUT_DIRECTION)
 		input = open(infiles->name, O_RDONLY, 0644);
 	else
-		input = open(infiles->here_doc_filename, O_RDWR, 0644);
+		input = infiles->here_doc_fd;
 	if (input == -1)
 	{
 		write(2, "minihell: ", 11);

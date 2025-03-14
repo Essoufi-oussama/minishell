@@ -17,12 +17,12 @@ char	*ft_getenv2(char *str, t_data *data)
 	t_env	*current;
 	char	*value;
 
-	if (data->env == NULL && strcmp(str, "PATH") == 0)
+	if (ft_strcmp(str, "PATH") == 0 && data->default_path)
 		return (ft_strdup(data->default_path, data));
 	current = data->env;
 	while (current)
 	{
-		if (ft_strncmp(current->env_var, str, ft_strlen(str)) == 0)
+		if (ft_strcmp_env(current->env_var, str) == 0)
 		{
 			value = ft_strchr(current->env_var, '=');
 			if (value == NULL)
@@ -85,6 +85,8 @@ void	check_add(char *str, t_data *data)
 	{
 		str = ft_strjoin(str, "=", data);
 		str = ft_strjoin(str, data->default_path, data);
+		free(data->default_path);
+		data->default_path = NULL;
 	}
 	rest = ft_strchr(str, '=');
 	if (!rest && ft_getenv2(str, data))

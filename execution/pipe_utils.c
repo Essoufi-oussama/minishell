@@ -76,6 +76,15 @@ void	ft_dup2(int input, int output, t_data *data)
 
 void	free_exit_child(t_data *data, t_alloc **head, int i)
 {
+	if (data->fds)
+	{
+		while(i < data->fd_count)
+		{
+			if (data->fds[i] != -1)
+				close(data->fds[i]);
+			i++;
+		}
+	}
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
     if (data->default_path)

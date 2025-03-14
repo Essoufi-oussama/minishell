@@ -49,8 +49,6 @@ t_redir	*in_heredoc(t_token **tokens, int *i, t_data *data)
 	(*i)++;
 	infile->quote = tokens[*i]->quoted;
 	infile->name = get_full_name_in(tokens, infile, i, data);
-	if (g_in_readline != 4)
-		here_doc(infile, data);
 	infile->next = NULL;
 	return (infile);
 }
@@ -99,6 +97,57 @@ t_command	*build_command(t_data *data, t_token **tokens, int i, int n)
 	return (command->args[j] = NULL, command->arg_n = j, command);
 }
 
+int	count_heredocs(t_command **commands)
+{
+	int	i;
+	int	count;
+	t_redir *current;
+
+	i = 0;
+	count = 0;
+	while(commands[i])
+	{
+		current = commands[i]->files;
+		while(current)
+		{
+			if(current->type == HERE_DOC)
+				count++;
+			current = current->next;
+		}
+		i++;
+	}
+	return(count);
+}
+
+void	open_heredocs(t_data *data)
+{
+	int	i;
+	int	j;
+	t_redir	*current;
+
+	data->fd_count = count_heredocs(data->commands);
+	data->fds = ft_malloc(sizeof(int) * data->fd_count, data);
+	i = -1;
+	j = 0;
+	while (j < data->fd_count)
+		data->fds[j++] = -1;
+	j = 0;
+	while(data->commands[++i])
+	{
+		current = data->commands[i]->files;
+		while(current)
+		{
+			if(g_in_readline == 4)
+				break ;
+			if(current->type == HERE_DOC && g_in_readline != 4)
+				here_doc(current, &j, data);
+			current = current->next;
+		}
+		if(g_in_readline == 4)
+			break ;
+	}
+}
+
 void	parse(t_data *data)
 {
 	int		i;
@@ -121,4 +170,5 @@ void	parse(t_data *data)
 		tokens = tokens + j;
 	}
 	data->commands[i] = NULL;
+	open_heredocs(data);
 }

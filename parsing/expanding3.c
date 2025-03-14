@@ -37,7 +37,7 @@ char	*ft_getenv(char *str, t_data *data)
 	t_env	*current;
 	char	*value;
 
-	if (data->env == NULL && ft_strcmp(str, "PATH") == 0)
+	if (ft_strcmp(str, "PATH") == 0 && data->default_path)
 		return (ft_strdup(data->default_path, data));
 	current = data->env;
 	while (current)

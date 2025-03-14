@@ -104,10 +104,9 @@ void	unset(char **str, t_data *data)
 	i = 1;
 	while (str[i])
 	{
-		if (data->env == NULL && ft_strcmp(str[i], "PATH") == 0)
+		if (data->default_path && ft_strcmp(str[i], "PATH") == 0)
 		{
-			if (data->default_path)
-				free(data->default_path);
+			free(data->default_path);
 			data->default_path = NULL;
 		}
 		else

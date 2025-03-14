@@ -14,65 +14,6 @@
 
 int	g_in_readline = 0;
 
-void	addenv(char **env, t_data *data)
-{
-	int		i;
-
-	i = 0;
-	while (env[i])
-	{
-		check_add(env[i], data);
-		i++;
-	}
-}
-
-void	empty_env_init(t_data *data)
-{
-	char	cwd[PATH_MAX];
-	char	*path;
-
-	check_add("_=./minishell", data);
-	path = getcwd(cwd, PATH_MAX);
-	check_add(ft_strjoin("PWD=", path, data), data);
-}
-
-void	env_init(char **env, t_data *data)
-{
-	if (*env == NULL)
-		empty_env_init(data);
-	else
-		addenv(env, data);
-	if (ft_getenv2("PATH", data))
-	{
-		data->default_path = ftt_strdup(PATH);
-		exit_stat(1, 1);
-		if (data->default_path == NULL)
-		{
-			exit_stat(1, 1);
-			free_exit(data);
-		}
-	}
-	check_add("OLDPWD", data);
-	shlvl_init(data);
-}
-
-void	data_init(t_data *data, int argc, char **argv)
-{
-	(void) argc;
-	(void) argv;
-	exit_stat(0, 1);
-	data->commands = NULL;
-	data->pwd = NULL;
-	data->line = NULL;
-	data->tokens = NULL;
-	data->alloc = NULL;
-	data->default_path = NULL;
-	data->env = NULL;
-	data->fds = NULL;
-	data->fd_count = 0;
-	data->token_size = 0;
-	data->command_count = 0;
-}
 
 static void	process_command(t_data *data, char *cmd)
 {

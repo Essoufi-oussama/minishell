@@ -30,47 +30,65 @@ void	ft_lstclear_env(t_env **lst)
 
 void	free_exit2(t_data *data, int i)
 {
+	if (data->fds)
+	{
+		while(i < data->fd_count)
+		{
+			if (data->fds[i] != -1)
+				close(data->fds[i]);
+			i++;
+		}
+	}
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
 	if (data->default_path)
 		free(data->default_path);
 	if (data->pwd)
 		free(data->pwd);
+	if (data->fd_write != -1)
+		close(data->fd_write);
 	exit(i);
 }
 
 void	free_exit(t_data *data)
 {
-	printf("exit\n");
+	int i;
+
+	i = 0;
+	if (data->fds)
+	{
+		while(i < data->fd_count)
+		{
+			if (data->fds[i] != -1)
+				close(data->fds[i]);
+			i++;
+		}
+	}
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
 	if (data->default_path)
 		free(data->default_path);
 	if (data->pwd)
 		free(data->pwd);
+	if (data->fd_write != -1)
+		close(data->fd_write);
+	printf("exit\n");
 	exit(exit_stat(0, 0));
 }
 
 void	destroy_heredocs(t_data *data)
 {
 	int		i;
-	t_redir	*curr;
 
 	i = 0;
-	while (data->commands[i])
+	while (i < data->fd_count)
 	{
-		curr = data->commands[i]->files;
-		while (curr)
-		{
-			if (curr->type == HERE_DOC)
-			{
-				if (access(curr->here_doc_filename, F_OK))
-					unlink(curr->here_doc_filename);
-			}
-			curr = curr->next;
-		}
+		if(data->fds[i] != -1)
+			close(data->fds[i]);
 		i++;
 	}
+	data->fd_count = 0;
+	data->fds = NULL;
 }
 
 void	add_data_line(char *str, t_data *data)
@@ -79,7 +97,10 @@ void	add_data_line(char *str, t_data *data)
 
 	new = malloc(sizeof(t_alloc));
 	if (new == NULL)
+	{
+		free(str);
 		free_exit(data);
+	}
 	new->addr = str;
 	new->next = NULL;
 	ft_lstadd_front(&data->alloc, new);

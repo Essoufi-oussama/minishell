@@ -62,13 +62,13 @@ int	arg_n(t_token **tokens, int tokens_count)
 	return (count);
 }
 
-static char	*get_heredoc_name(t_data *data)
+char	*get_heredoc_name(t_data *data)
 {
 	static int	i = 0;
 	char		*number;
 	char		*name;
 
-	i += 2748 * 5256 % 2099980;
+	i = (i + 2748) * 5256 % 2099980;
 	number = ft_itoa(i, data);
 	name = ft_strjoin("/tmp/.here_doc_limit", number, data);
 	if (access(name, F_OK | X_OK) != -1)
@@ -80,18 +80,13 @@ static char	*get_heredoc_name(t_data *data)
 	return (name);
 }
 
-void	here_doc(t_redir *infile, t_data *data)
+void	write_heredoc(int fd, t_redir *infile, t_data *data)
 {
-	int		fd;
 	char	*line;
 	char	*limiter;
 
 	g_in_readline = 3;
 	limiter = infile->name;
-	infile->here_doc_filename = get_heredoc_name(data);
-	fd = open(infile->here_doc_filename, O_RDWR | O_CREAT | O_TRUNC, 0640);
-	if (fd == -1)
-		return ;
 	while (1)
 	{
 		line = readline("> ");
@@ -106,4 +101,21 @@ void	here_doc(t_redir *infile, t_data *data)
 		write(fd, "\n", 1);
 	}
 	close(fd);
+	data->fd_write = -1;
+}
+
+void	here_doc(t_redir *infile, int *j, t_data *data)
+{
+	int		fd;
+	int		fd_read;
+
+	infile->here_doc_filename = get_heredoc_name(data);
+	fd = open(infile->here_doc_filename, O_RDWR | O_CREAT | O_TRUNC, 0640);
+	fd_read = open(infile->here_doc_filename, O_RDONLY);
+	data->fds[*j] = fd_read;
+	(*j)++;
+	data->fd_write = fd;
+	infile->here_doc_fd = fd_read;
+	unlink(infile->here_doc_filename);
+	write_heredoc(fd, infile, data);
 }

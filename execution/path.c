@@ -18,7 +18,7 @@ char	**env_path(char **env, t_data *data)
 	char	**path;
 
 	path = NULL;
-	if (env == NULL || *env == NULL)
+	if (data->default_path)
 		return (ft_split(data->default_path, ':', data));
 	i = 0;
 	while (env[i])

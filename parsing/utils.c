@@ -105,9 +105,7 @@ char	*ft_strtrim_tab(char const *s1, t_data *data)
 		start++;
 	while (end > start && s1[end] == '\t')
 		end--;
-	str = ft_malloc(end - start + 2, data);
-	if (!str)
-		return (NULL);
+	str = ft_malloc(sizeof(char) * (end - start + 2), data);
 	ft_strlcpy(str, &s1[start], end - start + 2);
 	return (str);
 }
