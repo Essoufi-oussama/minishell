@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:12:09 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/12 08:18:22 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:38:40 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ int	execute_child_process(char **str, char **env_list,
 	{
 		write(2, "minihell: ", 11);
 		if (access(str[0], F_OK) == -1 || access(str[0], F_OK | X_OK) == 0)
-		{
-			ft_putstr_fd(str[0], 2);
-			ft_putstr_fd(": command not found\n", 2);
-		}
+			print_error_status(str[0], ": command not found");
 		else
 			perror(str[0]);
 		free_exit_child(data, head, 127);
@@ -43,8 +40,8 @@ int	execute_child_process(char **str, char **env_list,
 	destroy_heredocs(data);
 	if (execve(path, str, env_list) == -1)
 	{
-		(access(str[0], F_OK | X_OK),
-			perror(str[0]));
+		if (access(str[0], F_OK | X_OK))
+			free_exit_child(data, head, 0);
 		free_exit_child(data, head, 1);
 	}
 	return (0);
@@ -79,22 +76,22 @@ void	execution_cas(char **args, t_env *env_list, t_data *data)
 	envs = convert_env_list_to_array(env_list, data);
 	if (ft_strcmp(args[0], "cd") == 0)
 	{
-		if(files_p(data->commands[0]) == 0)
+		if (files_p(data->commands[0]) == 0)
 			cd(args, data);
 	}
 	else if (ft_strcmp(args[0], "exit") == 0)
 	{
-		if(files_p(data->commands[0]) == 0)
+		if (files_p(data->commands[0]) == 0)
 			exit_program(args, data);
 	}
 	else if (ft_strcmp(args[0], "export") == 0 && args[1] != NULL)
 	{
-		if(files_p(data->commands[0]) == 0)
+		if (files_p(data->commands[0]) == 0)
 			export(args, data);
 	}
 	else if (ft_strcmp(args[0], "unset") == 0)
 	{
-		if(files_p(data->commands[0]) == 0)
+		if (files_p(data->commands[0]) == 0)
 			unset(args, data);
 	}
 	else

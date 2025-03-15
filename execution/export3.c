@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:08:50 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/10 21:13:36 by tbenzaid         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:35:17 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ void	check_add(char *str, t_data *data)
 	int		key_len;
 	int		append;
 	char	*key;
-	
-	if (ft_strcmp("PATH",str) == 0 && data->default_path)
+
+	if (ft_strcmp("PATH", str) == 0 && data->default_path)
 	{
 		str = ft_strjoin(str, "=", data);
 		str = ft_strjoin(str, data->default_path, data);

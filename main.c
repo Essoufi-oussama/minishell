@@ -6,14 +6,13 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 13:46:04 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 19:58:43 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:40:50 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	g_in_readline = 0;
-
 
 static void	process_command(t_data *data, char *cmd)
 {

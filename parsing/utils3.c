@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 23:52:26 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 19:50:53 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 17:49:08 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	free_exit2(t_data *data, int i)
 	j = 0;
 	if (data->fds)
 	{
-		while(j < data->fd_count)
+		while (j < data->fd_count)
 		{
 			if (data->fds[j] != -1)
 				close(data->fds[j]);
@@ -44,9 +44,9 @@ void	free_exit2(t_data *data, int i)
 	}
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
-    if (data->default_path)
+	if (data->default_path)
 		free(data->default_path);
-	if(data->pwd)
+	if (data->pwd)
 		free(data->pwd);
 	if (data->fd_write != -1)
 		close(data->fd_write);
@@ -55,12 +55,12 @@ void	free_exit2(t_data *data, int i)
 
 void	free_exit(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (data->fds)
 	{
-		while(i < data->fd_count)
+		while (i < data->fd_count)
 		{
 			if (data->fds[i] != -1)
 				close(data->fds[i]);
@@ -75,7 +75,7 @@ void	free_exit(t_data *data)
 		free(data->pwd);
 	if (data->fd_write != -1)
 		close(data->fd_write);
-	printf("exit\n");
+	write(1, "exit\n", 6);
 	exit(exit_stat(0, 0));
 }
 
@@ -86,7 +86,7 @@ void	destroy_heredocs(t_data *data)
 	i = 0;
 	while (i < data->fd_count)
 	{
-		if(data->fds[i] != -1)
+		if (data->fds[i] != -1)
 			close(data->fds[i]);
 		i++;
 	}

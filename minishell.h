@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 12:09:41 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 23:26:37 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:41:20 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ int		execute(t_data *data);
 void	pipe_cas(t_command **cmd, t_env *env_list, t_data *data);
 void	files(t_command *command, t_data *data, t_alloc **head);
 
-void		addenv(char **env, t_data *data);
+void	addenv(char **env, t_data *data);
 void	add_export(char *str, t_data *data);
 char	**sort_export(t_env *head, t_data *data, t_alloc **head_ch);
 void	check_add(char *str, t_data *data);
@@ -239,5 +239,9 @@ int		ft_atoi(const char *str);
 void	data_init(t_data *data, int argc, char **argv);
 void	env_init(char **env, t_data *data);
 char	*get_heredoc_name(t_data *data);
-
+void	open_heredocs(t_data *data);
+int		update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd);
+void	print_too_many_args(int is_child);
+void	print_invalid_arg_msg(char *arg, int is_child);
+void	handle_exit(t_data *data, t_alloc **head, int status, int is_child);
 #endif

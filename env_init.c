@@ -1,6 +1,14 @@
-
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/15 19:38:05 by oessoufi          #+#    #+#             */
+/*   Updated: 2025/03/15 19:40:40 by oessoufi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -36,7 +44,7 @@ int	is_inenv(char *str, t_data *data)
 	while (current)
 	{
 		if (ft_strcmp_env(current->env_var, str) == 0)
-			return(1);
+			return (1);
 		current = current->next;
 	}
 	return (0);

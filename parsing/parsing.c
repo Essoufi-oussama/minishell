@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 20:59:54 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 19:44:50 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 17:58:07 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,57 +95,6 @@ t_command	*build_command(t_data *data, t_token **tokens, int i, int n)
 			i++;
 	}
 	return (command->args[j] = NULL, command->arg_n = j, command);
-}
-
-int	count_heredocs(t_command **commands)
-{
-	int	i;
-	int	count;
-	t_redir *current;
-
-	i = 0;
-	count = 0;
-	while(commands[i])
-	{
-		current = commands[i]->files;
-		while(current)
-		{
-			if(current->type == HERE_DOC)
-				count++;
-			current = current->next;
-		}
-		i++;
-	}
-	return(count);
-}
-
-void	open_heredocs(t_data *data)
-{
-	int	i;
-	int	j;
-	t_redir	*current;
-
-	data->fd_count = count_heredocs(data->commands);
-	data->fds = ft_malloc(sizeof(int) * data->fd_count, data);
-	i = -1;
-	j = 0;
-	while (j < data->fd_count)
-		data->fds[j++] = -1;
-	j = 0;
-	while(data->commands[++i])
-	{
-		current = data->commands[i]->files;
-		while(current)
-		{
-			if(g_in_readline == 4)
-				break ;
-			if(current->type == HERE_DOC && g_in_readline != 4)
-				here_doc(current, &j, data);
-			current = current->next;
-		}
-		if(g_in_readline == 4)
-			break ;
-	}
 }
 
 void	parse(t_data *data)

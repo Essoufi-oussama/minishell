@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 13:22:33 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/12 18:01:48 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 18:11:24 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,49 +23,6 @@ char	*get_home(t_env *env)
 	return (NULL);
 }
 
-static int	update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd)
-{
-	char	cwd[PATH_MAX];
-	char	*path;
-	char	*path2;
-	int flag = 0;
-
-	if (ft_getenv2("PWD", data) == NULL && ft_getenv2("OLDPWD", data) != NULL)
-	{
-		remove_env_var("OLDPWD", data);
-		check_add("OLDPWD", data);
-		flag = 1;
-	}
-	else
-		check_add(ft_strjoin("OLDPWD=", prev_wd, data), data);
-	path = getcwd(cwd, PATH_MAX);
-	if (!path)
-	{
-		perror("cd: error retrieving current directory:"
-			"getcwd: cannot access parent directories");
-		if (prev_wd == NULL)
-			return (1);
-		if (prev_wd[ft_strlen(prev_wd) - 1] != '/')
-			path = ft_strjoin(prev_wd, "/", data);
-		else
-			path = prev_wd;
-		path2 = ft_strjoin(path, path3, data);
-		free(data->pwd);
-		data->pwd = ftt_strdup(path2);
-		if(!data->pwd)
-			free_exit(data);
-		if(flag == 0)
-			check_add(ft_strjoin("PWD=", path2, data), data);
-		return (1);
-	}
-	else
-	{
-		if(flag == 0)
-			check_add(ft_strjoin("PWD=", path, data), data);
-	}
-	return (0);
-}
-
 void	cd_to_home(t_data *data)
 {
 	char	*home;
@@ -76,7 +33,7 @@ void	cd_to_home(t_data *data)
 	if (!home)
 	{
 		printf("cd: HOME not set\n");
-		exit_stat(1, 1);;
+		exit_stat(1, 1);
 		return ;
 	}
 	if (chdir(home) == 0)

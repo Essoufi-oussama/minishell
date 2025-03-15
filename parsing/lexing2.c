@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 19:11:08 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/12 19:48:43 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 18:05:25 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	is_operation(int i)
 	return (i == INPUT_DIRECTION || i == OUTPUT_DIRECTION
 		|| i == OUT_APPEND || i == HERE_DOC || i == PIPE);
 }
-
 
 void	write_here_doc_lex(t_redir *current, t_data *data)
 {
@@ -32,7 +31,8 @@ void	write_here_doc_lex(t_redir *current, t_data *data)
 	while (1)
 	{
 		line = readline("> ");
-		add_data_line(line, data);
+		if (line != NULL)
+			add_data_line(line, data);
 		if (line == NULL || ft_strcmp(line, limiter) == 0)
 			break ;
 		write(fd, line, ft_strlen(line));

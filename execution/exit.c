@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 17:30:41 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 21:49:06 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:11:10 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ long	ft_atol2(char *str, t_data *data, t_alloc **head)
 	{
 		if (result > (LONG_MAX - (str[i] - '0')) / 10)
 		{
-			print_error_status(str, ":numeric argument required\n");
+			print_error_status(str, ":numeric argument required");
 			free_exit_child(data, head, 2);
 		}
 		result = result * 10 + (str[i] - '0');
@@ -81,7 +81,7 @@ int	valid(char *str)
 		return (0);
 	while (str[i] != '\0')
 	{
-		if (!isdigit(str[i]))
+		if (!ft_isdigit(str[i]))
 			return (0);
 		i++;
 	}
@@ -90,67 +90,51 @@ int	valid(char *str)
 
 void	exit_child(char **str, t_data *data, t_alloc **head)
 {
-	long	num;
-
-	if (str[1] != NULL)
+	if (str[1] == NULL)
 	{
-		if (str[2] != NULL)
-		{
-			if (!valid(str[1]))
-			{
-				write(2, "exit: ", 7);
-				print_error_status(str[1], ": numeric argument required\n");
-				free_exit_child(data, head, 2);
-			}
-			write(2, "exit: too many arguments\n", 26);
-			free_exit_child(data, head, 1);
-		}
-		else if (!valid(str[1]))
-		{
-			write(2, "exit: ", 7);
-			print_error_status(str[1], ": numeric argument required\n");
-			free_exit_child(data, head, 2);
-		}
-		else
-		{
-			num = ft_atol2(str[1], data, head);
-			free_exit_child(data, head, num % 256);
-		}
+		handle_exit(data, head, 0, 1);
+		return ;
 	}
-	else
-		free_exit_child(data, head, 0);
+	if (str[2] != NULL)
+	{
+		if (!valid(str[1]))
+		{
+			print_invalid_arg_msg(str[1], 1);
+			handle_exit(data, head, 2, 1);
+		}
+		print_too_many_args(1);
+		handle_exit(data, head, 1, 1);
+	}
+	if (!valid(str[1]))
+	{
+		print_invalid_arg_msg(str[1], 1);
+		handle_exit(data, head, 2, 1);
+	}
+	handle_exit(data, head, ft_atol2(str[1], data, head) % 256, 1);
 }
 
 void	exit_program(char **str, t_data *data)
 {
-	long	num;
-
-	if (str[1] != NULL)
+	if (str[1] == NULL)
 	{
-		if (str[2] != NULL)
-		{
-			if (!valid(str[1]))
-			{
-				printf("exit\nexit: %s: numeric argument required\n", str[1]);
-				free_exit2(data, 2);
-			}
-			printf("exit\n");
-			printf("exit: too many arguments\n");
-			exit_stat(1, 1);
-			return ;
-		}
-		else if (!valid(str[1]))
-		{
-			printf("exit\nexit: %s: numeric argument required\n", str[1]);
-			free_exit2(data, 2);
-		}
-		else
-		{
-			num = ft_atol(str[1], data);
-			printf("exit\n");
-			free_exit2(data, num % 256);
-		}
+		handle_exit(data, NULL, 0, 0);
+		return ;
 	}
-	else
-		(printf("exit\n"), free_exit2(data, 0));
+	if (str[2] != NULL)
+	{
+		if (!valid(str[1]))
+		{
+			print_invalid_arg_msg(str[1], 0);
+			handle_exit(data, NULL, 2, 0);
+		}
+		print_too_many_args(0);
+		handle_exit(data, NULL, 1, 0);
+		return ;
+	}
+	if (!valid(str[1]))
+	{
+		print_invalid_arg_msg(str[1], 0);
+		handle_exit(data, NULL, 2, 0);
+	}
+	handle_exit(data, NULL, ft_atol(str[1], data) % 256, 0);
 }

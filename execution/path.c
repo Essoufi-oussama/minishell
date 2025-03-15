@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 13:31:32 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/11 21:08:25 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:35:33 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	*get_path(char **env, char *cmp, t_data *data, t_alloc **head)
 		return (direct_execution(cmp, data, head));
 	if (cmp[0] == '/')
 		return (direct_execution(cmp, data, head));
-	if(!data->default_path && !ft_getenv2("PATH",data))
+	if (!data->default_path && !ft_getenv2("PATH", data))
 		return (direct_execution(cmp, data, head));
 	final_path = find_path(path, cmp, data, head);
 	return (final_path);

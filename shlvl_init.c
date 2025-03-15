@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shlvl_init.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/15 19:30:43 by oessoufi          #+#    #+#             */
+/*   Updated: 2025/03/15 19:33:23 by oessoufi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	check_for_non_digits(char *str)
@@ -30,16 +42,32 @@ void	shlvl_warning(int number)
 	write(2, ") too high, resetting to 1\n", 28);
 }
 
+static	void	update_shlvl(char *new_number, t_data *data)
+{
+	t_env	*current;
+
+	current = data->env;
+	while (current)
+	{
+		if (ft_strcmp_env(current->env_var, "SHLVL") == 0)
+			break ;
+		current = current->next;
+	}
+	free(current->env_var);
+	current->env_var = ftt_strdup(ft_strjoin("SHLVL=", new_number, data));
+	if (current->env_var == NULL)
+		free_exit(data);
+}
+
 static void	shlvl_init_when_shlvl_exists(char *shlvl, t_data *data)
 {
 	char	*new_number;
 	int		number;
-	t_env	*current;
 
 	if (ft_strlen(shlvl) == 0)
 		number = 0;
-	else if(check_for_non_digits(shlvl))
-		number = 0;	
+	else if (check_for_non_digits(shlvl))
+		number = 0;
 	else
 		number = ft_atoi(shlvl);
 	if (number < 0)
@@ -50,23 +78,14 @@ static void	shlvl_init_when_shlvl_exists(char *shlvl, t_data *data)
 		number = 0;
 	}
 	new_number = ft_itoa(number + 1, data);
-	current = data->env;
-	while(current)
-	{
-		if (ft_strcmp_env(current->env_var, "SHLVL") == 0)
-			break;
-		current = current->next;
-	}
-	free(current->env_var);
-	current->env_var = ftt_strdup(ft_strjoin("SHLVL=", new_number, data));
-	if (current->env_var == NULL)
-		free_exit(data);
+	update_shlvl(new_number, data);
 }
 
-void shlvl_init(t_data *data)
+void	shlvl_init(t_data *data)
 {
-	char *str = ft_getenv2("SHLVL", data);
+	char	*str;
 
+	str = ft_getenv2("SHLVL", data);
 	if (!str)
 		check_add("SHLVL=1", data);
 	else

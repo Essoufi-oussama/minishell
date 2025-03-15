@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:39:54 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/12 18:01:18 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:38:29 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	cd_child(char **str, t_data *data, t_alloc **head)
 void	cd(char **str, t_data *data)
 {
 	exit_stat(0, 1);
-	if(ft_getenv2("PWD", data) != NULL)
+	if (ft_getenv2("PWD", data) != NULL)
 	{
 		free(data->pwd);
 		data->pwd = NULL;

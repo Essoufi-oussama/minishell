@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:43:05 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/12 18:02:46 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:40:27 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,10 @@ void	execute_command(char **argv, char **env,
 	destroy_heredocs(data);
 	if (execve(path, argv, env) == -1)
 	{
-		access(argv[0], F_OK | X_OK);
+		if (access(argv[0], F_OK | X_OK))
+			free_exit_child(data, head, 0);
 		perror(argv[0]);
-		free_exit_child(data, &head, 1);
+		free_exit_child(data, head, 1);
 	}
 }
 
@@ -77,12 +78,12 @@ void	ft_dup2(int input, int output, t_data *data)
 
 void	free_exit_child(t_data *data, t_alloc **head, int i)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	if (data->fds)
 	{
-		while(j < data->fd_count)
+		while (j < data->fd_count)
 		{
 			if (data->fds[j] != -1)
 				close(data->fds[j]);
@@ -91,9 +92,9 @@ void	free_exit_child(t_data *data, t_alloc **head, int i)
 	}
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
-    if (data->default_path)
+	if (data->default_path)
 		free(data->default_path);
-	if(data->pwd)
+	if (data->pwd)
 		free(data->pwd);
 	if (data->fd_write != -1)
 		close(data->fd_write);
