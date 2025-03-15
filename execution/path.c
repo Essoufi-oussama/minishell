@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tbenzaid <tbenzaid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 13:31:32 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/15 19:35:33 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 20:51:46 by tbenzaid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,11 @@ char	*get_path(char **env, char *cmp, t_data *data, t_alloc **head)
 
 	if (!cmp || !*cmp)
 		return (NULL);
+	if (ft_strcmp(cmp, "..") == 0)
+	{
+		print_error_status(cmp, " Command not found");
+		free_exit_child(data, head, 127);
+	}
 	if (stat(cmp, &path_stat) == 0
 		&& S_ISDIR(path_stat.st_mode) && ft_strchr(cmp, '/'))
 	{
@@ -93,6 +98,5 @@ char	*get_path(char **env, char *cmp, t_data *data, t_alloc **head)
 		return (direct_execution(cmp, data, head));
 	if (!data->default_path && !ft_getenv2("PATH", data))
 		return (direct_execution(cmp, data, head));
-	final_path = find_path(path, cmp, data, head);
-	return (final_path);
+	return (final_path = find_path(path, cmp, data, head), final_path);
 }
