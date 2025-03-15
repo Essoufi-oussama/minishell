@@ -39,7 +39,7 @@ int	outfile_cas_p(t_redir *outfiles)
 		output = open(outfiles->name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (outfiles->type == OUT_APPEND)
 		output = open(outfiles->name, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	if (!output)
+	if (output == -1)
 	{
 		write(2, "minihell: ", 11);
 		perror(outfiles->name);

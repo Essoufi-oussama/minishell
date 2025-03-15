@@ -55,7 +55,7 @@ int	execu_cmd(char **str, char **env_list, t_data *data)
 
 	pid = fork();
 	if (pid < 0)
-		free_exit(data);
+		return (perror("fork"), -1);;
 	if (pid == 0)
 	{
 		head = NULL;

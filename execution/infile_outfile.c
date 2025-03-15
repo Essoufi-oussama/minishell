@@ -46,7 +46,7 @@ void	outfile_cas(t_redir *outfiles, t_data *data, t_alloc **head)
 		output = open(outfiles->name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (outfiles->type == OUT_APPEND)
 		output = open(outfiles->name, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	if (!output)
+	if (output == -1)
 	{
 		perror(outfiles->name);
 		free_exit_child(data, head, 1);
