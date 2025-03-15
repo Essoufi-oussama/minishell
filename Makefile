@@ -8,7 +8,7 @@ HEADER = minishell.h
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 

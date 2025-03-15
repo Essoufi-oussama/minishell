@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:47:22 by oessoufi          #+#    #+#             */
-/*   Updated: 2025/03/15 17:47:25 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:54:49 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,36 @@ void	ft_putnbr_fd(int n, int fd)
 	write(fd, &c, 1);
 }
 
+static int	overflow(int sign)
+{
+	if (sign == 1)
+		return (0);
+	else
+		return (0);
+}
+
 int	ft_atoi(const char *str)
 {
-	long	result;
-	int		sign;
+	unsigned long long			result;
+	int							sign;
+	unsigned long long			max;
 
 	result = 0;
 	sign = 1;
-	while ((*str >= 9 && *str <= 13) || *str == 32)
+	max = 9223372036854775807;
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
 		str++;
-	if ((*str == '-' || *str == '+') && ft_isdigit(*(str + 1)))
+	if (*str == '+' || *str == '-')
 	{
-		sign = -1 * (*str == '-') + 1 * (*str == '+');
+		if (*str++ == '-')
+			sign = -1;
+	}
+	while (*str >= '0' && *str <= '9')
+	{
+		if (result > (max - (*str - '0')) / 10)
+			return (overflow(sign));
+		result = result * 10 + (*str - '0');
 		str++;
 	}
-	while (*str >= 48 && *str <= 57)
-	{
-		result = result * 10 + sign * (*str - 48);
-		str++;
-	}
-	return (result);
+	return (result * sign);
 }

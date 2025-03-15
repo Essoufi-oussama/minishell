@@ -6,7 +6,7 @@
 /*   By: oessoufi <oessoufi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 02:43:05 by tbenzaid          #+#    #+#             */
-/*   Updated: 2025/03/15 19:40:27 by oessoufi         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:42:41 by oessoufi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void	execute_command(char **argv, char **env,
 	if (execve(path, argv, env) == -1)
 	{
 		if (access(argv[0], F_OK | X_OK))
-			free_exit_child(data, head, 0);
+			free_exit_child(data, &head, 0);
 		perror(argv[0]);
-		free_exit_child(data, head, 1);
+		free_exit_child(data, &head, 1);
 	}
 }
 
