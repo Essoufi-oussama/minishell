@@ -32,7 +32,7 @@ void	check_export(t_data *data, t_token **tokens, t_command *command)
 				command->is_export = 1;
 			return ;
 		}
-		else if (tokens[i] == PIPE)
+		else if (tokens[i]->type == PIPE)
 			return ;
 	}
 }

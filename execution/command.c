@@ -40,6 +40,7 @@ int	execute_child_process(char **str, char **env_list,
 			perror(str[0]);
 		free_exit_child(data, head, 127);
 	}
+	destroy_heredocs(data);
 	if (execve(path, str, env_list) == -1)
 	{
 		(access(str[0], F_OK | X_OK),

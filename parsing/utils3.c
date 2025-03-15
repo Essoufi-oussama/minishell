@@ -30,20 +30,23 @@ void	ft_lstclear_env(t_env **lst)
 
 void	free_exit2(t_data *data, int i)
 {
+	int	j;
+
+	j = 0;
 	if (data->fds)
 	{
-		while(i < data->fd_count)
+		while(j < data->fd_count)
 		{
-			if (data->fds[i] != -1)
-				close(data->fds[i]);
-			i++;
+			if (data->fds[j] != -1)
+				close(data->fds[j]);
+			j++;
 		}
 	}
 	ft_lstclear_garbage(&data->alloc);
 	ft_lstclear_env(&data->env);
-	if (data->default_path)
+    if (data->default_path)
 		free(data->default_path);
-	if (data->pwd)
+	if(data->pwd)
 		free(data->pwd);
 	if (data->fd_write != -1)
 		close(data->fd_write);

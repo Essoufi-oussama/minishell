@@ -47,6 +47,7 @@ void	execute_command(char **argv, char **env,
 	path = get_path(env, argv[0], data, &head);
 	if (!path)
 		handle_cmd_error(argv[0], data, &head);
+	destroy_heredocs(data);
 	if (execve(path, argv, env) == -1)
 	{
 		access(argv[0], F_OK | X_OK);
@@ -76,13 +77,16 @@ void	ft_dup2(int input, int output, t_data *data)
 
 void	free_exit_child(t_data *data, t_alloc **head, int i)
 {
+	int j;
+
+	j = 0;
 	if (data->fds)
 	{
-		while(i < data->fd_count)
+		while(j < data->fd_count)
 		{
-			if (data->fds[i] != -1)
-				close(data->fds[i]);
-			i++;
+			if (data->fds[j] != -1)
+				close(data->fds[j]);
+			j++;
 		}
 	}
 	ft_lstclear_garbage(&data->alloc);
@@ -91,6 +95,8 @@ void	free_exit_child(t_data *data, t_alloc **head, int i)
 		free(data->default_path);
 	if(data->pwd)
 		free(data->pwd);
+	if (data->fd_write != -1)
+		close(data->fd_write);
 	ft_lstclear_garbage(head);
 	exit(i);
 }
