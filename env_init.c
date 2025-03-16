@@ -31,8 +31,12 @@ void	empty_env_init(t_data *data)
 	char	*path;
 
 	path = getcwd(cwd, PATH_MAX);
+	if (!path)
+		perror("shell-init: error retrieving current directory:"
+			"getcwd: cannot access parent directories");
+	else
+		check_add(ft_strjoin("PWD=", path, data), data);
 	shlvl_init(data);
-	check_add(ft_strjoin("PWD=", path, data), data);
 	check_add("_=./minishell", data);
 }
 
@@ -52,7 +56,7 @@ int	is_inenv(char *str, t_data *data)
 
 void	env_init(char **env, t_data *data)
 {
-	if (*env == NULL)
+	if (env == NULL || *env == NULL)
 		empty_env_init(data);
 	else
 		addenv(env, data);

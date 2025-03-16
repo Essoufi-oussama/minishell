@@ -64,7 +64,7 @@ static void	process_env(char *str, t_data *data, char *key, int key_len)
 	current = data->env;
 	while (current)
 	{
-		if (ft_strncmp(current->env_var, key, key_len) == 0)
+		if (ft_strcmp_env(current->env_var, key) == 0)
 		{
 			update_existing(current, str, ft_strchr(str, '='), data);
 			return ;

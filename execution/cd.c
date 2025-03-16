@@ -16,7 +16,7 @@ char	*get_home(t_env *env)
 {
 	while (env != NULL)
 	{
-		if (ft_strncmp(env->env_var, "HOME=", 5) == 0)
+		if (ft_strcmp_env(env->env_var, "HOME") == 0)
 			return (env->env_var + 5);
 		env = env->next;
 	}

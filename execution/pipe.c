@@ -49,7 +49,7 @@ int	first_child(t_command *command, t_env *env_list, t_data *data)
 
 	env = convert_env_list_to_array(env_list, data);
 	if (pipe(fd) == -1)
-		return (perror("pipe"), -1);
+		return (exit_stat(1, 1), perror("pipe"), -1);
 	pid = fork();
 	if (pid == -1)
 	{
