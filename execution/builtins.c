@@ -82,7 +82,7 @@ void	remove_env_var(char *var_name, t_data *data)
 	current = data->env;
 	while (current)
 	{
-		if (ft_strncmp(current->env_var, var_name, ft_strlen(var_name)) == 0)
+		if (ft_strcmp_env(current->env_var, var_name) == 0)
 		{
 			if (!prev)
 				data->env = current->next;
