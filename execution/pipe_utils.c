@@ -50,9 +50,9 @@ void	execute_command(char **argv, char **env,
 	destroy_heredocs(data);
 	if (execve(path, argv, env) == -1)
 	{
-		if (access(argv[0], F_OK | X_OK))
+		if (access(argv[0], F_OK | X_OK) != -1)
 			free_exit_child(data, &head, 0);
-		perror(argv[0]);
+		perror("execve");
 		free_exit_child(data, &head, 1);
 	}
 }

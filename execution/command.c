@@ -30,8 +30,7 @@ int	execute_child_process(char **str, char **env_list,
 	path = get_path(env_list, str[0], data, head);
 	if (!path)
 	{
-		write(2, "minihell: ", 11);
-		if (access(str[0], F_OK) == -1 || access(str[0], F_OK | X_OK) == 0)
+		if (access(str[0], F_OK) == -1)
 			print_error_status(str[0], ": command not found");
 		else
 			perror(str[0]);
@@ -40,8 +39,9 @@ int	execute_child_process(char **str, char **env_list,
 	destroy_heredocs(data);
 	if (execve(path, str, env_list) == -1)
 	{
-		if (access(str[0], F_OK | X_OK))
+		if (access(str[0], F_OK | X_OK) != -1)
 			free_exit_child(data, head, 0);
+		perror("execve");
 		free_exit_child(data, head, 1);
 	}
 	return (0);

@@ -36,7 +36,9 @@ void	cd_to_home(t_data *data)
 		exit_stat(1, 1);
 		return ;
 	}
-	if (chdir(home) == 0)
+	if (ft_strlen(home) == 0)
+		exit_stat(0, 1);
+	else if (chdir(home) == 0)
 		exit_stat(update_pwd_and_oldpwd(data, NULL, prev_wd), 1);
 	else
 	{
