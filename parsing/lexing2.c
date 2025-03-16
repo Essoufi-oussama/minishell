@@ -18,7 +18,7 @@ int	is_operation(int i)
 		|| i == OUT_APPEND || i == HERE_DOC || i == PIPE);
 }
 
-void	write_here_doc_lex(t_redir *current, t_data *data)
+int	write_here_doc_lex(t_redir *current, t_data *data)
 {
 	char	*line;
 	char	*limiter;
@@ -27,6 +27,8 @@ void	write_here_doc_lex(t_redir *current, t_data *data)
 	limiter = current->name;
 	current->here_doc_filename = get_heredoc_name(data);
 	fd = open(current->here_doc_filename, O_RDWR | O_CREAT | O_TRUNC, 0640);
+	if (fd == -1)
+		return (perror("open heredoc:"), -1);
 	unlink(current->here_doc_filename);
 	while (1)
 	{
@@ -39,6 +41,7 @@ void	write_here_doc_lex(t_redir *current, t_data *data)
 		write(fd, "\n", 1);
 	}
 	close(fd);
+	return (0);
 }
 
 void	open_heredocs_lex(t_redir **head, t_data *data)
@@ -48,7 +51,8 @@ void	open_heredocs_lex(t_redir **head, t_data *data)
 	current = *head;
 	while (current)
 	{
-		write_here_doc_lex(current, data);
+		if (write_here_doc_lex(current, data) == -1)
+			return ;
 		if (g_in_readline == 4)
 			return ;
 		current = current->next;
