@@ -97,7 +97,7 @@ t_command	*build_command(t_data *data, t_token **tokens, int i, int n)
 	return (command->args[j] = NULL, command->arg_n = j, command);
 }
 
-void	parse(t_data *data)
+int	parse(t_data *data)
 {
 	int		i;
 	int		j;
@@ -119,5 +119,7 @@ void	parse(t_data *data)
 		tokens = tokens + j;
 	}
 	data->commands[i] = NULL;
-	open_heredocs(data);
+	if (open_heredocs(data) == -1)
+		return (-1);
+	return (0);
 }

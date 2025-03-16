@@ -34,18 +34,14 @@ int	count_heredocs(t_command **commands)
 	return (count);
 }
 
-void	open_heredocs(t_data *data)
+int	open_heredocs(t_data *data)
 {
 	t_redir	*current;
 	int		i;
 	int		j;
 
-	data->fd_count = count_heredocs(data->commands);
-	data->fds = ft_malloc(sizeof(int) * data->fd_count, data);
+	initialize_heredoc_fds(data);
 	i = -1;
-	j = 0;
-	while (j < data->fd_count)
-		data->fds[j++] = -1;
 	j = 0;
 	while (data->commands[++i])
 	{
@@ -55,12 +51,14 @@ void	open_heredocs(t_data *data)
 			if (g_in_readline == 4)
 				break ;
 			if (current->type == HERE_DOC && g_in_readline != 4)
-				here_doc(current, &j, data);
+				if (here_doc(current, &j, data) == -1)
+					return (-1);
 			current = current->next;
 		}
 		if (g_in_readline == 4)
 			break ;
 	}
+	return (0);
 }
 
 char	*get_heredoc_name(t_data *data)
@@ -105,18 +103,23 @@ void	write_heredoc(int fd, t_redir *infile, t_data *data)
 	data->fd_write = -1;
 }
 
-void	here_doc(t_redir *infile, int *j, t_data *data)
+int	here_doc(t_redir *infile, int *j, t_data *data)
 {
 	int		fd;
 	int		fd_read;
 
 	infile->here_doc_filename = get_heredoc_name(data);
 	fd = open(infile->here_doc_filename, O_RDWR | O_CREAT | O_TRUNC, 0640);
+	if (fd == -1)
+		return (perror("minihell:"), exit_stat(1, 1), -1);
 	fd_read = open(infile->here_doc_filename, O_RDONLY);
+	if (fd == -1)
+		return (perror("minihell:"), exit_stat(1, 1), close(fd), -1);
 	data->fds[*j] = fd_read;
 	(*j)++;
 	data->fd_write = fd;
 	infile->here_doc_fd = fd_read;
 	unlink(infile->here_doc_filename);
 	write_heredoc(fd, infile, data);
+	return (0);
 }

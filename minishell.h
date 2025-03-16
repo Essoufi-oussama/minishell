@@ -130,11 +130,11 @@ char	*get_expanded_value(char *token, int i, int *j, t_data *data);
 int		skip_ops_except_pipe(t_token **tokens, int *current, t_data *data);
 void	handle_heredocs(t_token **tokens, t_data *data);
 void	remove_token(t_token **tokens, int index);
-void	here_doc(t_redir *infile, int *j, t_data *data);
+int		here_doc(t_redir *infile, int *j, t_data *data);
 
 void	check_export(t_data *data, t_token **tokens, t_command *command);
 t_redir	*in_heredoc(t_token **tokens, int *i, t_data *data);
-void	parse(t_data *data);
+int		parse(t_data *data);
 int		count_commands(t_token **tokens);
 void	ft_putstr_fd(char *s, int fd);
 int		arg_n(t_token **tokens, int tokens_count);
@@ -239,9 +239,12 @@ int		ft_atoi(const char *str);
 void	data_init(t_data *data, int argc, char **argv);
 void	env_init(char **env, t_data *data);
 char	*get_heredoc_name(t_data *data);
-void	open_heredocs(t_data *data);
+int		open_heredocs(t_data *data);
 int		update_pwd_and_oldpwd(t_data *data, char *path3, char *prev_wd);
 void	print_too_many_args(int is_child);
 void	print_invalid_arg_msg(char *arg, int is_child);
 void	handle_exit(t_data *data, t_alloc **head, int status, int is_child);
+void	initialize_heredoc_fds(t_data *data);
+int		count_heredocs(t_command **commands);
+
 #endif

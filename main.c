@@ -16,15 +16,18 @@ int	g_in_readline = 0;
 
 static void	process_command(t_data *data, char *cmd)
 {
+	int	i;
+
 	if (check_quotes(cmd) != 1)
 	{
 		tokenize(data, cmd);
 		if (lexing(data->tokens, data) == 1)
 		{
 			expanding(data);
-			parse(data);
+			i = parse(data);
 			if (g_in_readline != 4)
-				execute(data);
+				if (i != -1)
+					execute(data);
 			destroy_heredocs(data);
 		}
 	}

@@ -67,3 +67,14 @@ int	ft_atoi(const char *str)
 	}
 	return (result * sign);
 }
+
+void	initialize_heredoc_fds(t_data *data)
+{
+	int	j;
+
+	data->fd_count = count_heredocs(data->commands);
+	data->fds = ft_malloc(sizeof(int) * data->fd_count, data);
+	j = 0;
+	while (j < data->fd_count)
+		data->fds[j++] = -1;
+}
