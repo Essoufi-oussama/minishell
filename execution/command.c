@@ -53,6 +53,11 @@ int	execu_cmd(char **str, char **env_list, t_data *data)
 	int		status;
 	t_alloc	*head;
 
+	if (str[0] && ft_strcmp(str[0] , "./minishell") == 0)
+	{
+		signal(SIGINT, noting);
+		signal(SIGQUIT, noting);
+	}
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), -1);

@@ -41,6 +41,8 @@ void	sigint_handler(int sig)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+	else if (g_in_readline == 0)
+		write(1, "\n", 1);
 	if (g_in_readline == 3)
 	{
 		g_in_readline = 4;
