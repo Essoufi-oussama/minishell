@@ -117,7 +117,7 @@ void	exit_program(char **str, t_data *data)
 {
 	if (str[1] == NULL)
 	{
-		handle_exit(data, NULL, 0, 0);
+		free_exit(data);
 		return ;
 	}
 	if (str[2] != NULL)
