@@ -94,7 +94,7 @@ char	*get_path(char **env, char *cmp, t_data *data, t_alloc **head)
 	path = env_path(env, data);
 	if (cmp[0] == '.' && cmp[1] == '/')
 		return (direct_execution(cmp, data, head));
-	if (cmp[0] == '/')
+	if (ft_strchr(cmp, '/')
 		return (direct_execution(cmp, data, head));
 	if (!data->default_path && !ft_getenv2("PATH", data))
 		return (direct_execution(cmp, data, head));
